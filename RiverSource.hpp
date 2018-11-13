@@ -3,27 +3,26 @@
 #include <string>
 #include <iostream>
 using namespace std;
-
 struct River
 {
 	string riverName;
-	*section sections;
+	section* sections;
 };
 struct Section
 {
 	int bestWaterLevel;
 	string secName;
 	string rapidClass;
-	*section nextSection;
-	*rapid firstRapid;
-	*note notes;
+	section* nextSection;
+	rapid* firstRapid;
+	note* notes;
 };
 struct Rapid
 {
 	string rapidName;
 	double mileage;
 	string rapidClass;
-	*rapid nextRapid;
+	rapid* nextRapid;
 	Sting beta;
 };
 struct waterLevel
@@ -34,7 +33,7 @@ struct waterLevel
 struct Note
 {
 	string aNote;
-	*note nextNote;
+	note* nextNote;
 };
 public:
 	//constructor
@@ -77,14 +76,11 @@ public:
 	//takes in the name of the river
 	void diplayEntireRiver(string riverName);
 
+	//find the location of a section
+	section* findSection(string river, string secitonName);
 private:
-int numberOfRivers=20;
+int numberOfRivers=15;
 River rivers[numberOfRivers];
 int currentLength;
 
 #endif
-
-
-
-
-
