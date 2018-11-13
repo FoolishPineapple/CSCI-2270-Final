@@ -77,7 +77,7 @@ public:
 	void diplayEntireRiver(string riverName);
 
 private:
-int numberOfRivers=20;
+int numberOfRivers=15;
 River rivers[numberOfRivers];
 int currentLength;
 
