@@ -46,7 +46,7 @@ int main()
 						{
 							d=stoi(word);
 						}
-						else if(col==20)
+						else if(col==13)
 						{
 							c=stoi(word);
 							filled=true;
