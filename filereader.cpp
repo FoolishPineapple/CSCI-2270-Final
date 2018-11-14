@@ -53,7 +53,7 @@ int main()
 						}
 						if (filled==true)
 						{
-							//cout<<location<<endl;
+							
 							thisLevel[location].month=m;
 							thisLevel[location].day=d;
 							thisLevel[location].cfs=c;
