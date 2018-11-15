@@ -13,6 +13,7 @@ struct Section
 	int bestWaterLevel;
 	string secName;
 	string rapidClass;
+	double sectionLength;
 	section* nextSection;
 	rapid* firstRapid;
 	note* notes;
