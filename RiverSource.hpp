@@ -77,7 +77,7 @@ class RiverSource
 
 		//add section names from a file
 		//promts user for a river and for file name
-		void addSection();
+		void addSection(River *riverName, Section* sectionToAdd);
 
 		//displays an entire river from head to end
 		//takes in the name of the river
@@ -96,6 +96,7 @@ class RiverSource
 
 		Section* searchSections(string name);
 
+		void mergeRivers(River* feeder, Section *mainStream);
 
 
 	private:
