@@ -74,7 +74,7 @@ int main()
       stringstream ss;
       ss<<line;
       string word;
-      getline(ss,word,','');
+      getline(ss,word,',');
       riverName=word;
       riverExist=searchRiver(riverName);
       if(riverExist==nullptr)
