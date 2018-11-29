@@ -4,7 +4,57 @@
 #include <fstream>
 
 using namespace std;
-
+int hashRiver(string name)
+{
+	int key=0;
+	for (int i=0;i<name.size;i++)
+	{
+		key+=int(name[i]);
+	}
+	key=key%numberOfRivers;
+	return key;
+}
+int hashSection(string name)
+{
+	int key=0;
+	for (int i=0;i<name.size;i++)
+	{
+		key+=int(name[i]);
+	}
+	key=key%numberOfSections;
+	return key;
+}
+void buildSectionHash()
+{
+	int key;
+	section newSection;
+	for (int i=0;i<15;i++)
+	{
+		section* current=rivers[i].nextSection;
+		while (current!=nullptr)
+		{
+			key=hashSection(current->secName);
+			sections[key].push_back(current);
+			current=current->nextSection;
+		}
+	}
+}
+section* searchSections(string name)
+{
+	section* location;
+	int key=hashSection(name);
+	section* current=sections[key];
+	while(current!=nullptr)
+	{
+		if (current->secName==name)
+			{
+				return current;
+			}
+		current=current->nextSection;
+	}
+	cout<<"section not found"<<endl;
+	return nullptr;
+}
 int main()
 {
   RiverSource Source();
