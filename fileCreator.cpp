@@ -18,20 +18,20 @@ void readIN()
   {
     while(quit==false)
     {
-      cout<<"Enter River Name: ";
+      cout<<"Enter River Name: "<<endl;
       getline(cin,riverName);
-      cout<<"Enter Section Name: ";
+      cout<<"Enter Section Name: "<<endl;
       getline(cin,secName);
-      cout<<"Enter the section's Class: ";
+      cout<<"Enter the section's Class: "<<endl;
       getline(cin,c);
-      cout<<"Enter the section length: ";
+      cout<<"Enter the section length: "<<endl;;
       getline(cin,length);
-      cout<<"Enter the section's best flow: ";
+      cout<<"Enter the section's best flow: "<<endl;
       getline(cin,bestFlow);
       outFile<<riverName<<","<<secName<<","<<c<<","<<length<<","<<bestFlow<<endl;
       cout<<"successfully loaded"<<endl;
-      cout<<"enter more 1-yes 0-no :";
-      cin>>choice;
+      cout<<"enter more 1-yes 0-no :"<<endl;
+      getline(cin,choice);
       if(choice!="1")
       {
         quit=true;
