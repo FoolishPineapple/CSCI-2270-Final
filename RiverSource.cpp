@@ -4,33 +4,33 @@
 #include <fstream>
 
 using namespace std;
-int hashRiver(string name)
+int RiverSource::hashRiver(string name)
 {
 	int key=0;
-	for (int i=0;i<name.size;i++)
+	for (int i=0;i<name.size();i++)
 	{
 		key+=int(name[i]);
 	}
 	key=key%numberOfRivers;
 	return key;
 }
-int hashSection(string name)
+int RiverSource::hashSection(string name)
 {
 	int key=0;
-	for (int i=0;i<name.size;i++)
+	for (int i=0;i<name.size();i++)
 	{
 		key+=int(name[i]);
 	}
 	key=key%numberOfSections;
 	return key;
 }
-void buildSectionHash()
+void RiverSource::buildSectionHash()
 {
 	int key;
-	section newSection;
+	Section newSection;
 	for (int i=0;i<15;i++)
 	{
-		section* current=rivers[i].nextSection;
+		Section* current=rivers[i].firstSection;
 		while (current!=nullptr)
 		{
 			key=hashSection(current->secName);
@@ -39,11 +39,25 @@ void buildSectionHash()
 		}
 	}
 }
-section* searchSections(string name)
+River* RiverSource::searchRiver(string name)
 {
-	section* location;
+	int key= hashRiver(name);
+	River *current=&rivers[key];
+	while(current!=nullptr)
+	{
+		if (current->riverName==name)
+		{
+			return current;
+		}
+		current=current->nextRiver;
+	}
+	return nullptr;
+}
+Section* RiverSource::searchSections(string name)
+{
+	Section* location;
 	int key=hashSection(name);
-	section* current=sections[key];
+	Section *current=&sections[key];
 	while(current!=nullptr)
 	{
 		if (current->secName==name)
@@ -57,7 +71,7 @@ section* searchSections(string name)
 }
 int main()
 {
-  RiverSource Source();
+  RiverSource Source;
   ifstream riverFile("riverRead.txt");
   string line;
   string riverName;
@@ -76,14 +90,14 @@ int main()
       string word;
       getline(ss,word,',');
       riverName=word;
-      riverExist=searchRiver(riverName);
+      riverExist=Source.searchRiver(riverName);
       if(riverExist==nullptr)
       {
         riverExist= new River(riverName);
       }
       getline(ss,word,',');
       secName=word;
-      sectionExist=searchSections(secName);
+      sectionExist=Source.searchSections(secName);
       if(sectionExist==nullptr)
       {
         Section temp;
@@ -97,13 +111,13 @@ int main()
         getline(ss,word,',');
         bestFlow=stoi(word);
         temp.bestWaterLevel=bestFlow;
-        temp->nextSection=nullptr;
-        temp->notes=nullptr;
-        addSection(riverExist,temp);
+        temp.nextSection=nullptr;
+        temp.notes=nullptr;
+        Source.addSection(riverExist,temp);
       }
       else
       {
-        mergeRivers(riverExist,sectionExist);
+        Source.mergeRivers(riverExist,sectionExist);
       }
     }
   }
@@ -112,3 +126,4 @@ int main()
   //*****
   return 0;
 }
+
