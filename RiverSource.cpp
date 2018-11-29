@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-
+#include <sstream>
 using namespace std;
 int RiverSource::hashRiver(string name)
 {
@@ -39,6 +39,15 @@ void RiverSource::buildSectionHash()
 		}
 	}
 }
+void RiverSource::mergeRivers(River* feeder, Section *mainStream)
+{
+	Section *temp=feeder->firstSection;
+	while (temp->nextSection!=nullptr)
+	{
+		temp=temp->nextSection;
+	}
+	temp->nextSection=mainStream;
+}
 River* RiverSource::searchRiver(string name)
 {
 	int key= hashRiver(name);
@@ -69,6 +78,17 @@ Section* RiverSource::searchSections(string name)
 	cout<<"section not found"<<endl;
 	return nullptr;
 }
+void RiverSource::addSection(River *name, Section* sectionToAdd)
+{
+	int key=hashRiver(name->riverName);
+	Section *temp=rivers[key].firstSection;
+	while (temp->nextSection!=nullptr)
+		{
+			temp=temp->nextSection;
+		}
+		temp->nextSection=sectionToAdd;
+}
+
 int main()
 {
   RiverSource Source;
@@ -94,6 +114,7 @@ int main()
       if(riverExist==nullptr)
       {
         riverExist= new River(riverName);
+        rivers[Source.hashRiver(riverName)].push_back(riverExist);
       }
       getline(ss,word,',');
       secName=word;
@@ -113,7 +134,7 @@ int main()
         temp.bestWaterLevel=bestFlow;
         temp.nextSection=nullptr;
         temp.notes=nullptr;
-        Source.addSection(riverExist,temp);
+        Source.addSection(riverExist,&temp);
       }
       else
       {
@@ -126,4 +147,3 @@ int main()
   //*****
   return 0;
 }
-
