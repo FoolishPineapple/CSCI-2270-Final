@@ -1,18 +1,12 @@
 #ifndef RIVERSOURCE_HPP
-#define REVERSOURCE_HPP
+#define RIVERSOURCE_HPP
 #include <string>
 #include <iostream>
 using namespace std;
-struct River
+struct Note
 {
-	string riverName;
-	section* sections;
-	River *nextRiver;
-	River(string name)
-	{
-		this->riverName=name;
-		this->sections=this->nextRiver=nullptr;
-	}
+	string aNote;
+	Note* nextNote;
 };
 struct Section
 {
@@ -21,27 +15,31 @@ struct Section
 	string rapidClass;
 	double sectionLength;
 	Section* nextSection;
-	rapid* firstRapid;
-	note* notes;
+	Note* notes;
 };
-struct Rapid
+struct River
 {
-	string rapidName;
-	double mileage;
-	string rapidClass;
-	rapid* nextRapid;
-	Sting beta;
+	string riverName;
+	Section* firstSection;
+	River *nextRiver;
+	River(string name)
+	{
+		this->riverName=name;
+		this->firstSection=nullptr;
+		this->nextRiver=nullptr;
+	}
+	River()
+	{
+
+	}
 };
+
 struct waterLevel
 {
 	string date;
 	int waterLevel;
 };
-struct Note
-{
-	string aNote;
-	note* nextNote;
-};
+
 
 class RiverSource
 {
@@ -50,7 +48,7 @@ class RiverSource
 		RiverSource();
 
 		//deconstructor
-		~riverSource();
+		~RiverSource();
 
 
 		void createSection();
@@ -59,17 +57,12 @@ class RiverSource
 		//find the best day to run a certain section given the name of the section
 		void bestDayOnSection(string name);
 
-		//display the beta for a run
-		//outputs the mileage for each rapid in a section
-		//outputs the beta for each rapid
-		void diplayBeta(section *wantedSection);
-
 		//given a start and stop section, output all raipids and their beta
 		//with the correct mileages
-		void linkSections(section *start,section *stop);
+		void linkSections(Section *start,Section *stop);
 
 		//displays a water water level for a given day
-		void diplayWaterLevel(section *wantedSection, string date);
+		void diplayWaterLevel(Section *wantedSection, string date);
 
 		//find the best section to run on a given day
 		//takes in the class, date and wanted mileage
@@ -91,10 +84,25 @@ class RiverSource
 		void diplayEntireRiver(string riverName);
 
 		//find the location of a section
-		section* findSection(string river, string secitonName);
+		Section* findSection(string river, string secitonName);
+
+		int hashRiver(string name);
+
+		int hashSection(string name);
+
+		void buildSectionHash();
+
+		River* searchRiver(string name);
+
+		Section* searchSections(string name);
+
+
+
 	private:
 		int numberOfRivers=15;
-		River rivers[numberOfRivers];
+		River *rivers=new River[numberOfRivers];
 		int currentLength;
+		int numberOfSections=20;
+		Section *sections= new Section[numberOfSections];
 };
 #endif
