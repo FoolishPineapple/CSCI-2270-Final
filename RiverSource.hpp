@@ -2,6 +2,7 @@
 #define RIVERSOURCE_HPP
 #include <string>
 #include <iostream>
+#include <vector>
 using namespace std;
 struct Note
 {
@@ -15,6 +16,7 @@ struct Section
 	string rapidClass;
 	double sectionLength;
 	Section* nextSection;
+	Section* secHashSec;
 	Note* notes;
 };
 struct River
@@ -43,9 +45,15 @@ struct waterLevel
 
 class RiverSource
 {
+
+
 	public:
 		//constructor
-		RiverSource();
+		RiverSource()
+		{
+			River *rivers=new River[numberOfRivers];
+			Section *sections=new Section[numberOfSections];
+		};
 
 		//deconstructor
 		~RiverSource();
@@ -98,12 +106,16 @@ class RiverSource
 
 		void mergeRivers(River* feeder, Section *mainStream);
 
+		void addRiver(River *river);
+
+
 
 	private:
-		int numberOfRivers=15;
-		River *rivers=new River[numberOfRivers];
+		int  const numberOfRivers=15;
+		int const numberOfSections=20;
+		
 		int currentLength;
-		int numberOfSections=20;
-		Section *sections= new Section[numberOfSections];
+		
+		
 };
 #endif
