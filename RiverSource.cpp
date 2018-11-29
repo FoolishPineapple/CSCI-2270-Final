@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 using namespace std;
+
 int RiverSource::hashRiver(string name)
 {
 	int key=0;
@@ -30,13 +31,16 @@ void RiverSource::buildSectionHash()
 	Section newSection;
 	for (int i=0;i<15;i++)
 	{
-		Section* current=rivers[i].firstSection;
-		while (current!=nullptr)
+		if (!rivers[i].empty())
 		{
-			key=hashSection(current->secName);
-			sections[key].push_back(current);
-			current=current->nextSection;
-		}
+			Section current=rivers[i].firstSection;
+			while (current!=nullptr)
+			{
+				key=hashSection(current->secName);
+				/////////////
+				current=current->nextSection;
+			}
+	    }
 	}
 }
 void RiverSource::mergeRivers(River* feeder, Section *mainStream)
@@ -51,7 +55,7 @@ void RiverSource::mergeRivers(River* feeder, Section *mainStream)
 River* RiverSource::searchRiver(string name)
 {
 	int key= hashRiver(name);
-	River *current=&rivers[key];
+	River *current=rivers[key];
 	while(current!=nullptr)
 	{
 		if (current->riverName==name)
@@ -77,6 +81,23 @@ Section* RiverSource::searchSections(string name)
 	}
 	cout<<"section not found"<<endl;
 	return nullptr;
+}
+void RiverSource::addRiver(River *river)
+{
+	int key=hashRiver(river->riverName);
+	River *location=rivers[key];
+	if(location==nullptr)
+		{
+			location=river;
+		}
+	else
+	{
+		while(location->nextRiver!=nullptr)
+		{
+			location=location->nextRiver;
+		}
+		location->next=river;
+	}
 }
 void RiverSource::addSection(River *name, Section* sectionToAdd)
 {
@@ -114,7 +135,7 @@ int main()
       if(riverExist==nullptr)
       {
         riverExist= new River(riverName);
-        rivers[Source.hashRiver(riverName)].push_back(riverExist);
+        Source.addRiver(riverExist);
       }
       getline(ss,word,',');
       secName=word;
