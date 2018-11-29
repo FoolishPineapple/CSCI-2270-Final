@@ -1,1 +1,20 @@
-
+Colorado River,Byers Canyon,IV,3,1200
+Colorado River,Gore Canyon,V,9.5,1100
+Colorado River,Pumphouse,III,11.2,2000
+Colorado River,Burns Hole,II,35,5000
+Colorado River,Burns Canyon,II,35,5000
+Colorado River,Barrel Springs,V,3.8,3000
+Colorado River,Shoshone,III,2,3000
+Colorado River,Grizzly Creek,II,6,5000
+Colorado River,Two Rivers,II,4,3000
+Colorado River,South Canyon,I,9.5,5000
+Colorado River,New Castle,I,60,5000
+Colorado River,Big Sur,I,0.1,20000
+Colorado River,Junk Show,I,30.5,8000
+Colorado River,Ruby Horsethief,II,25,1800
+Gunnison River,Town Run,II,20.5,1200
+Gunnison River,Gunnison Whitewater Park,II,0.4,4500
+Gunnison River,Black Canyon,V,13.5,2000
+Gunnison River,Gunnison Gorge,III,13.5,2000
+Gunnison River,Lower Gunnison,I,44,6800
+Fraser River,Tabernash,IV,9.4,1600
