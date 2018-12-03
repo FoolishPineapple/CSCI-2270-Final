@@ -109,8 +109,8 @@ class RiverSource
 	private:
 		int numberOfRivers;
 		int numberOfSections;
-		River *riverHashTable;
-		Section *sectionHashTable;
+		River *rivers;
+		Section *sections;
 		int currentLength;
 
 
