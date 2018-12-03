@@ -3,6 +3,8 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <fstream>
+#include <sstream>
 using namespace std;
 struct Note
 {
@@ -22,7 +24,7 @@ struct Section
 struct River
 {
 	string riverName;
-	Section* firstSection;
+	Section *firstSection;
 	River *nextRiver;
 	River(string name)
 	{
