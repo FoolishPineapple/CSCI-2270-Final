@@ -31,16 +31,15 @@ void RiverSource::buildSectionHash()
 	Section newSection;
 	for (int i=0;i<15;i++)
 	{
-		if (!rivers[i].empty())
-		{
-			Section current=rivers[i].firstSection;
+		
+			Section *current=rivers[i].firstSection;
 			while (current!=nullptr)
 			{
 				key=hashSection(current->secName);
 				/////////////
 				current=current->nextSection;
 			}
-	    }
+	    
 	}
 }
 void RiverSource::mergeRivers(River* feeder, Section *mainStream)
@@ -55,12 +54,12 @@ void RiverSource::mergeRivers(River* feeder, Section *mainStream)
 River* RiverSource::searchRiver(string name)
 {
 	int key= hashRiver(name);
-	River *current=rivers[key];
+	River current=rivers[key];
 	while(current!=nullptr)
 	{
-		if (current->riverName==name)
+		if (current.riverName==name)
 		{
-			return current;
+			return *current;
 		}
 		current=current->nextRiver;
 	}
@@ -85,18 +84,18 @@ Section* RiverSource::searchSections(string name)
 void RiverSource::addRiver(River *river)
 {
 	int key=hashRiver(river->riverName);
-	River *location=rivers[key];
+	River location=*rivers[key];
 	if(location==nullptr)
 		{
 			location=river;
 		}
 	else
 	{
-		while(location->nextRiver!=nullptr)
+		while(location.nextRiver!=nullptr)
 		{
-			location=location->nextRiver;
+			location=location.nextRiver;
 		}
-		location->next=river;
+		location.nextRiver=river;
 	}
 }
 void RiverSource::addSection(River *name, Section* sectionToAdd)
