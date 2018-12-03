@@ -24,7 +24,7 @@ struct Section
 struct River
 {
 	string riverName;
-	Section *firstSection;
+	Section* firstSection;
 	River *nextRiver;
 	River(string name)
 	{
@@ -47,16 +47,9 @@ struct waterLevel
 
 class RiverSource
 {
-	River *rivers;
-	Section *sections;
-
 	public:
 		//constructor
-		RiverSource()
-		{
-			rivers=new River[numberOfRivers];
-			sections=new Section[numberOfSections];
-		};
+		RiverSource(int riverSize,int sectionSize);
 
 		//deconstructor
 		~RiverSource();
@@ -114,11 +107,12 @@ class RiverSource
 
 
 	private:
-		int  const numberOfRivers=15;
-		int const numberOfSections=20;
-		
+		int numberOfRivers;
+		int numberOfSections;
+		River *riverHashTable;
+		Section *sectionHashTable;
 		int currentLength;
-		
-		
+
+
 };
 #endif
