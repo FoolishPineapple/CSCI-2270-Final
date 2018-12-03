@@ -9,10 +9,8 @@ RiverSource::RiverSource(int riverSize,int sectionSize)
 {
   numberOfRivers=riverSize;
   numberOfSections=sectionSize;
-  Section *sectionArray= new Section[numberOfSections];
-  River *riverArray=new River[numberOfRivers];
-  rivers=riverArray;
-  sections=sectionArray;
+  sections= new vector<Section>[numberOfSections];
+  rivers=new vector<River> [numberOfRivers];
 }
 
 RiverSource::~RiverSource()
@@ -69,14 +67,16 @@ void RiverSource::mergeRivers(River* feeder, Section *mainStream)
 River* RiverSource::searchRiver(string name)
 {
 	int key= hashRiver(name);
-	River *current=rivers[key];
+	River current;
+	current.riverName=rivers[key];
+	//current.nextSection=rivers[key].nextSection;
 	while(current!=nullptr)
 	{
-		if (current->riverName==name)
+		if (current.riverName==name)
 		{
 			return &current;
 		}
-		current=current->nextRiver;
+		current=current.nextRiver;
 	}
 	return nullptr;
 }
@@ -84,7 +84,7 @@ River* RiverSource::searchRiver(string name)
 Section* RiverSource::searchSections(string name)
 {
 	int key=hashSection(name);
-	Section *current=sections[key];
+	Section current=sections[key];
   if(current!=NULL)
   {
     while(current->secName!=name && current!=NULL)
@@ -102,7 +102,7 @@ Section* RiverSource::searchSections(string name)
 void RiverSource::addRiver(River *river)
 {
 	int key=hashRiver(river->riverName);
-	River *location=rivers[key];
+	River location=rivers[key];
 	if(location==nullptr)
 		{
 			location=river;
@@ -120,11 +120,11 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)
 {
 	int key=hashRiver(name->riverName);
 	Section temp=rivers[key].firstSection;
-	while (temp->nextSection!=nullptr)
+	while (temp-.extSection!=nullptr)
 		{
-			temp=temp->nextSection;
+			temp=temp.nextSection;
 		}
-		temp->nextSection=sectionToAdd;
+		temp.nextSection=sectionToAdd;
 }
 
 int main()
@@ -207,7 +207,7 @@ while (!done)
 			getline(cin, userInput);
 			int key=Source.hashRiver(userInput);
 			section currentSec=rivers[key];
-			cout<<rivers[key].firstSection->name<<endl;
+			cout<<*rivers[key].firstSection->name<<endl;
 			cout<<"Enter file name: ";
 			getline(cin,userInput);
 			ifstream fileRead(userInput);
@@ -217,6 +217,7 @@ while (!done)
 			{
 				stringstream ss;
 				ss<<line;
+				string word;
 				int count=0;
 				while(getline(ss,word, ','))
 				{
