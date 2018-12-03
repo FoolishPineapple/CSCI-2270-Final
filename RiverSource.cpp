@@ -180,8 +180,71 @@ int main()
       }
     }
   }
-  //*****
-  //GUI and user interface
-  //*****
+ 
+  	cout<<"Welcome to RiverSource!"<<endl;
+	cout<<"================================"<<endl;
+	char userChoice;
+	cout<<"Please select an option:"<<endl;
+	cout<<"1. Quit"<<endl;	
+	cout<<"2. Load water level data"<<endl;
+	bool done=false;
+while (!done)
+{
+	switch(userChoice)
+	{
+		case ('1'):
+		{
+			cout<<"GoodBye"<<endl;
+			done=true;
+		}
+		case ('2'):
+		{
+			string userInput;
+			cout<<"Please load in water data for rivers"<<endl;
+			bool inDone=false;
+			//waterLevel temp[365];
+			cout<<"Enter a river name: ";
+			getline(cin, userInput);
+			int key=Source.hashRiver(userInput);
+			section currentSec=rivers[key];
+			cout<<rivers[key].firstSection->name<<endl;
+			cout<<"Enter file name: ";
+			getline(cin,userInput);
+			ifstream fileRead(userInput);
+			string line;
+			int counter=0;
+			while(getline(userInput, line))
+			{
+				stringstream ss;
+				ss<<line;
+				int count=0;
+				while(getline(ss,word, ','))
+				{
+					if(count==0)
+					{
+						currentSec.levels[counter].month=stoi(word);
+						count++;
+					}
+					else if (count==1)
+					{
+						currentSec.levels[counter].day=stoi(word);
+						count++;
+					}
+					else
+					{
+						currentSec.levels[counter].waterLevel=stoi(word);
+						count++;
+					}	
+				}
+				counter++;
+			}
+			
+				
+				
+
+			
+		}
+	}
+}
   return 0;
 }
