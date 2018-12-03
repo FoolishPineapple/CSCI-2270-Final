@@ -45,14 +45,15 @@ struct waterLevel
 
 class RiverSource
 {
-
+	River *rivers;
+	Section *sections;
 
 	public:
 		//constructor
 		RiverSource()
 		{
-			River *rivers=new River[numberOfRivers];
-			Section *sections=new Section[numberOfSections];
+			rivers=new River[numberOfRivers];
+			sections=new Section[numberOfSections];
 		};
 
 		//deconstructor
