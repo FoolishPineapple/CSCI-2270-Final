@@ -109,8 +109,8 @@ class RiverSource
 	private:
 		int numberOfRivers;
 		int numberOfSections;
-		River *rivers;
-		Section *sections;
+		vector<River> *rivers;
+		vector<Section> *sections;
 		int currentLength;
 
 
