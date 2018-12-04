@@ -26,6 +26,7 @@ struct WaterLevel
 struct Section
 {
 	int bestWaterLevel;
+	string riverName;
 	string secName;
 	string rapidClass;
 	double sectionLength;
@@ -33,9 +34,10 @@ struct Section
 	Section* nextSection;
 	Section* secHashSec;
 	Note* notes;
-	Section(string name)
+	Section(string name,string river)
 	{
 		this->secName=name;
+		this->riverName=river;
 		this->nextSection=nullptr;
 		this->secHashSec=nullptr;
 	}
@@ -104,7 +106,7 @@ class RiverSource
 
 		//displays an entire river from head to end
 		//takes in the name of the river
-		void diplayEntireRiver(string riverName);
+		void displayEntireRiver(string riverName,int data);
 
 		//find the location of a section
 		Section* findSection(string river, string secitonName);
@@ -124,6 +126,10 @@ class RiverSource
 		void addRiver(River *river);
 
 		void addLevels();
+
+		int getRiverSize();
+
+		void printAll();
 
 
 
