@@ -11,15 +11,38 @@ struct Note
 	string aNote;
 	Note* nextNote;
 };
+struct waterLevel
+{
+	int day;
+	int month;
+	int waterLevel;
+	waterLevel()
+	{
+		this->day=0;
+		this->month=o;
+		this->waterLevel=0;
+	}
+};
 struct Section
 {
 	int bestWaterLevel;
 	string secName;
 	string rapidClass;
 	double sectionLength;
+	waterLevel levels[365];
 	Section* nextSection;
 	Section* secHashSec;
 	Note* notes;
+	Section(string name)
+	{
+		this->secName=name;
+		this->nextSection=nullptr;
+		this->secHashSec=nullptr;
+	}
+	Section()
+	{
+
+	}
 };
 struct River
 {
@@ -38,11 +61,7 @@ struct River
 	}
 };
 
-struct waterLevel
-{
-	string date;
-	int waterLevel;
-};
+
 
 
 class RiverSource
