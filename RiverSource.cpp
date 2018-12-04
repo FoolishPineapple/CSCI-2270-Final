@@ -270,21 +270,21 @@ int main()
       sectionExist=Source.searchSections(secName);
       if(sectionExist==nullptr)
       {
-        Section temp;
-        temp.riverName=riverName;
-        temp.secName=secName;
+        Section *temp=new Section;
+        temp->riverName=riverName;
+        temp->secName=secName;
         getline(ss,word,',');
         c=word;
-        temp.rapidClass=c;
+        temp->rapidClass=c;
         getline(ss,word,',');
         length=stod(word);
-        temp.sectionLength=length;
+        temp->sectionLength=length;
         getline(ss,word,',');
         bestFlow=stoi(word);
-        temp.bestWaterLevel=bestFlow;
-        temp.nextSection=nullptr;
-        temp.notes=nullptr;
-        Source.addSection(riverExist,&temp);
+        temp->bestWaterLevel=bestFlow;
+        temp->nextSection=nullptr;
+        temp->notes=nullptr;
+        Source.addSection(riverExist,temp);
       }
       else
       {
@@ -310,10 +310,11 @@ while (!done)
 		{
 			cout<<"GoodBye"<<endl;
 			done=true;
+			break;
 		}
 		case 2:
 		{
-			Source.addLevels();
+			//Source.addLevels();
 
 			break;
 		}
