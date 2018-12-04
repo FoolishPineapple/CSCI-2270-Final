@@ -116,6 +116,7 @@ void RiverSource::addRiver(River *river)
 		}
 		location->nextRiver=river;
 	}
+
 }
 void RiverSource::addSection(River *name, Section* sectionToAdd)
 {
@@ -133,6 +134,22 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)
 			temp=temp->nextSection;
 		}
 	    temp->nextSection=sectionToAdd;
+	}
+
+	int key2=hashSection(sectionToAdd->secName);
+	Section *temp2=&sections[key2];
+	if(temp2==nullptr)
+	{
+		sections[key2]=sectionToAdd;
+	}
+	else
+	{
+		
+		while(temp2->secHashSec!=nullptr)
+		{
+			temp2=temp2->secHashSec;
+		}
+		temp2->secHashSec=sectionToAdd;
 	}
 }
 
@@ -192,35 +209,28 @@ int main()
  
   	cout<<"Welcome to RiverSource!"<<endl;
 	cout<<"================================"<<endl;
-	char userChoice;
+	string userChoice;
 	cout<<"Please select an option:"<<endl;
 	cout<<"1. Quit"<<endl;	
 	cout<<"2. Load water level data"<<endl;
+	getline(cin, userChoice);
+	int choice=stoi(userChoice);
 	bool done=false;
 while (!done)
 {
-	switch(userChoice)
+	switch(choice)
 	{
-		case ('1'):
+		case 1:
 		{
 			cout<<"GoodBye"<<endl;
 			done=true;
 		}
-		case '2':
+		case 2:
 		{
-			string userInput;
-			cout<<"Please load in water data for rivers"<<endl;
-			bool inDone=false;
-			//waterLevel temp[365];
-			cout<<"Enter a river name: ";
-			getline(cin, userInput);
-			//int key=Source.hashRiver(userInput);
-			River *tempRiv=Source.searchRiver(userInput);
-			Section *currentSec=tempRiv->firstSection;
-			//cout<<*rivers[key].firstSection->name<<endl;
-			cout<<"Enter file name: ";
-			getline(cin,userInput);
-			ifstream fileRead(userInput);
+			for(int i=0;i< 100;i++)
+			{
+				string fileName;
+			ifstream fileRead(fileName);
 			string line;
 
 			int counter=0;
@@ -250,7 +260,7 @@ while (!done)
 				}
 				counter++;
 			}
-			
+			}
 				
 				
 
