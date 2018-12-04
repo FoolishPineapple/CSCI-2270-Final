@@ -140,7 +140,7 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)
 	Section *temp2=&sections[key2];
 	if(temp2==nullptr)
 	{
-		sections[key2]=sectionToAdd;
+		sections[key2]=*sectionToAdd;
 	}
 	else
 	{
@@ -227,44 +227,32 @@ while (!done)
 		}
 		case 2:
 		{
-			for(int i=0;i< 100;i++)
+			for(int i=0;i< numberOfSections;i++)
 			{
-				string fileName;
-			ifstream fileRead(fileName);
-			string line;
-
-			int counter=0;
-			while(getline(fileRead, line))
-			{
-				stringstream ss;
-				ss<<line;
-				string word;
-				int count=0;
-				while(getline(ss,word, ','))
+				Section currentSection=sectionArray[i];
+				while(currentSection!=nullptr)
 				{
-					if(count==0)
+					string waterLevelFile=currentSection.secName + ".txt";
+					ifstream levelFile(waterLevelFile);
+					string line;
+					int daysOfYear=0;
+					while(getline(levelFile, line))
 					{
-						currentSec->levels[counter].month=stoi(word);
-						count++;
+						stringstream s1;
+						s1<<line;
+						string word;
+						getline(s1, word, ',');
+						currentSection.levels[daysOfYear].month=stoi(word);
+						getline(s1, word, ',');
+						currentSection.levels[daysOfYear].day=stoi(word);
+						getline(s1, word, ',');
+						currentSection.levels[daysOfYear].waterLevel=stoi(word);
+						daysOfYear++;
 					}
-					else if (count==1)
-					{
-						currentSec->levels[counter].day=stoi(word);
-						count++;
-					}
-					else
-					{
-						currentSec->levels[counter].waterLevel=stoi(word);
-						count++;
-					}	
+					currentSection=currentSection->secHashSec;
 				}
-				counter++;
 			}
-			}
-				
-				
-
-			
+			break;
 		}
 	}
 }
