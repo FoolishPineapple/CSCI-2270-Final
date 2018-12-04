@@ -11,15 +11,15 @@ struct Note
 	string aNote;
 	Note* nextNote;
 };
-struct waterLevel
+struct WaterLevel
 {
 	int day;
 	int month;
 	int waterLevel;
-	waterLevel()
+	WaterLevel()
 	{
 		this->day=0;
-		this->month=o;
+		this->month=0;
 		this->waterLevel=0;
 	}
 };
@@ -29,7 +29,7 @@ struct Section
 	string secName;
 	string rapidClass;
 	double sectionLength;
-	waterLevel levels[365];
+	WaterLevel levels[365];
 	Section* nextSection;
 	Section* secHashSec;
 	Note* notes;
