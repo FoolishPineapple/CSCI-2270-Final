@@ -123,6 +123,8 @@ class RiverSource
 
 		void addRiver(River *river);
 
+		void addLevels();
+
 
 
 	private:
