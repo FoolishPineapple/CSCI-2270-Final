@@ -68,9 +68,9 @@ River* RiverSource::searchRiver(string name)
 {
 	int key= hashRiver(name);
 	River current;
-	current.riverName=rivers[key];
+	current=rivers->at(key);
 	//current.nextSection=rivers[key].nextSection;
-	while(current!=nullptr)
+	while(current!=NULL)
 	{
 		if (current.riverName==name)
 		{
@@ -84,16 +84,17 @@ River* RiverSource::searchRiver(string name)
 Section* RiverSource::searchSections(string name)
 {
 	int key=hashSection(name);
-	Section current=sections[key];
-  if(current!=NULL)
+	Section current;
+	current=sections->at(key);
+  if(current!=nullptr)
   {
-    while(current->secName!=name && current!=NULL)
+    while(current.secName!=name && current!=NULL)
   	{
-  		if (current->secName==name)
+  		if (current.secName==name)
   			{
   				return current;
   			}
-  		current=current->nextSection;
+  		current=current.nextSection;
   	}
   }
 	cout<<"section not found"<<endl;
@@ -102,7 +103,7 @@ Section* RiverSource::searchSections(string name)
 void RiverSource::addRiver(River *river)
 {
 	int key=hashRiver(river->riverName);
-	River location=rivers[key];
+	River location=rivers->at(key);
 	if(location==nullptr)
 		{
 			location=river;
@@ -113,14 +114,14 @@ void RiverSource::addRiver(River *river)
 		{
 			location=location->nextRiver;
 		}
-		location->nextRiver=river;
+		location.nextRiver=river;
 	}
 }
 void RiverSource::addSection(River *name, Section* sectionToAdd)
 {
 	int key=hashRiver(name->riverName);
 	Section temp=rivers[key].firstSection;
-	while (temp-.extSection!=nullptr)
+	while (temp.nextSection!=nullptr)
 		{
 			temp=temp.nextSection;
 		}
@@ -206,8 +207,7 @@ while (!done)
 			cout<<"Enter a river name: ";
 			getline(cin, userInput);
 			int key=Source.hashRiver(userInput);
-			section currentSec=rivers[key];
-			cout<<*rivers[key].firstSection->name<<endl;
+			Section currentSec=rivers.at(key)->firstSection;
 			cout<<"Enter file name: ";
 			getline(cin,userInput);
 			ifstream fileRead(userInput);
