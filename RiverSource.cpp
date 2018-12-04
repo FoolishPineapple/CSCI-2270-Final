@@ -9,8 +9,10 @@ RiverSource::RiverSource(int riverSize,int sectionSize)
 {
   numberOfRivers=riverSize;
   numberOfSections=sectionSize;
-  sections= new vector<Section>[numberOfSections];
-  rivers=new vector<River> [numberOfRivers];
+  Section *sectionArray= new Section[numberOfSections];
+  River *riverArray=new River[numberOfRivers];
+  rivers=riverArray;
+  sections=sectionArray;
 }
 
 RiverSource::~RiverSource()
@@ -67,16 +69,14 @@ void RiverSource::mergeRivers(River* feeder, Section *mainStream)
 River* RiverSource::searchRiver(string name)
 {
 	int key= hashRiver(name);
-	River current;
-	current.riverName=rivers[key];
-	//current.nextSection=rivers[key].nextSection;
+	River *current=&rivers[key];
 	while(current!=nullptr)
 	{
-		if (current.riverName==name)
+		if (current->riverName==name)
 		{
-			return &current;
+			return current;
 		}
-		current=current.nextRiver;
+		current=current->nextRiver;
 	}
 	return nullptr;
 }
@@ -84,7 +84,7 @@ River* RiverSource::searchRiver(string name)
 Section* RiverSource::searchSections(string name)
 {
 	int key=hashSection(name);
-	Section current=sections[key];
+	Section *current=&sections[key];
   if(current!=NULL)
   {
     while(current->secName!=name && current!=NULL)
@@ -102,7 +102,7 @@ Section* RiverSource::searchSections(string name)
 void RiverSource::addRiver(River *river)
 {
 	int key=hashRiver(river->riverName);
-	River location=rivers[key];
+	River *location=&rivers[key];
 	if(location==nullptr)
 		{
 			location=river;
@@ -119,12 +119,12 @@ void RiverSource::addRiver(River *river)
 void RiverSource::addSection(River *name, Section* sectionToAdd)
 {
 	int key=hashRiver(name->riverName);
-	Section temp=rivers[key].firstSection;
-	while (temp-.extSection!=nullptr)
+	Section *temp=rivers[key].firstSection;
+	while (temp->nextSection!=nullptr)
 		{
-			temp=temp.nextSection;
+			temp=temp->nextSection;
 		}
-		temp.nextSection=sectionToAdd;
+		temp->nextSection=sectionToAdd;
 }
 
 int main()
