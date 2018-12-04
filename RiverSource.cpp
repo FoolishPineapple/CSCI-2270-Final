@@ -85,7 +85,7 @@ Section* RiverSource::searchSections(string name)
 {
 	int key=hashSection(name);
 	Section *current=&sections[key];
-	cout<<current->secName<<endl;
+	//cout<<current->secName<<endl;
   if(current!=NULL)
   {
     while(current->secName!=name && current->nextSection!=NULL)
@@ -97,7 +97,7 @@ Section* RiverSource::searchSections(string name)
   		current=current->nextSection;
   	}
   }
-	cout<<"section not found"<<endl;
+	//cout<<"section not found"<<endl;
 	return nullptr;
 }
 void RiverSource::addRiver(River *river)
@@ -121,7 +121,7 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)
 {
 	int key=hashRiver(name->riverName);
 	Section *temp=rivers[key].firstSection;
-	cout<<temp<<endl;
+	//cout<<temp<<endl;
 	if (temp==nullptr)
 	{
 		temp=sectionToAdd;
@@ -206,7 +206,7 @@ while (!done)
 			cout<<"GoodBye"<<endl;
 			done=true;
 		}
-		case ('2'):
+		case '2':
 		{
 			string userInput;
 			cout<<"Please load in water data for rivers"<<endl;
@@ -214,15 +214,17 @@ while (!done)
 			//waterLevel temp[365];
 			cout<<"Enter a river name: ";
 			getline(cin, userInput);
-			int key=Source.hashRiver(userInput);
-			Section currentSec=rivers[key];
-			cout<<*rivers[key].firstSection->name<<endl;
+			//int key=Source.hashRiver(userInput);
+			River *tempRiv=Source.searchRiver(userInput);
+			Section *currentSec=tempRiv->firstSection;
+			//cout<<*rivers[key].firstSection->name<<endl;
 			cout<<"Enter file name: ";
 			getline(cin,userInput);
 			ifstream fileRead(userInput);
 			string line;
+
 			int counter=0;
-			while(getline(userInput, line))
+			while(getline(fileRead, line))
 			{
 				stringstream ss;
 				ss<<line;
@@ -232,17 +234,17 @@ while (!done)
 				{
 					if(count==0)
 					{
-						currentSec.levels[counter].month=stoi(word);
+						currentSec->levels[counter].month=stoi(word);
 						count++;
 					}
 					else if (count==1)
 					{
-						currentSec.levels[counter].day=stoi(word);
+						currentSec->levels[counter].day=stoi(word);
 						count++;
 					}
 					else
 					{
-						currentSec.levels[counter].waterLevel=stoi(word);
+						currentSec->levels[counter].waterLevel=stoi(word);
 						count++;
 					}	
 				}
