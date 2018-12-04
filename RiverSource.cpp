@@ -141,21 +141,21 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)
 	    temp->nextSection=sectionToAdd;
 	}
 
-	// int key2=hashSection(sectionToAdd->secName);
-	// Section *temp2=&sections[key2];
-	// if(temp2==nullptr)
-	// {
-	// 	sections[key2]=*sectionToAdd;
-	// }
-	// else
-	// {
-	// 	//ERROR HERE
-	// 	while(temp2->secHashSec!=nullptr)
-	// 	{
-	// 		temp2=temp2->secHashSec;
-	// 	}
-	// 	temp2->secHashSec=sectionToAdd; // should we be adding *sectionToAdd instead like up above
-	// }
+	int key2=hashSection(sectionToAdd->secName);
+	Section *temp2=&sections[key2];
+	if(temp2==nullptr)
+	{
+		sections[key2]=*sectionToAdd;
+	}
+	else
+	{
+		//ERROR HERE
+		while(temp2->secHashSec!=nullptr)
+		{
+			temp2=temp2->secHashSec;
+		}
+		temp2->secHashSec=sectionToAdd; // should we be adding *sectionToAdd instead like up above
+	}
 }
 void RiverSource::addLevels()
 {
@@ -190,9 +190,13 @@ void RiverSource::addLevels()
 void RiverSource::displayEntireRiver(string riverName,int data)
 {
   River *displayRiver=searchRiver(riverName);
+
   Section *currentSection=displayRiver->firstSection;
+  
   cout<<riverName<<endl;
   cout<<currentSection->secName<<endl;
+  cout<<"test 5"<<endl;
+
   while(currentSection!=nullptr)
   {
     currentSection=currentSection->nextSection;
@@ -215,6 +219,7 @@ void RiverSource::displayEntireRiver(string riverName,int data)
     cout<<"    |    "<<endl;
     cout<<"    V   "<<endl;
   }
+
 }
 
 void RiverSource::printAll()
@@ -222,18 +227,25 @@ void RiverSource::printAll()
   for(int i=0;i<numberOfRivers;i=i+1)
   {
     River temp=rivers[i];
-    if(temp.nextRiver==nullptr)
+    if (temp.riverName!="NONAME")
     {
-      displayEntireRiver(temp.riverName,4);
-    }
-    else
-    {
-      while(temp.nextRiver!=nullptr)
-      {
-        displayEntireRiver(temp.riverName,4);
-        temp=*temp.nextRiver;
-      }
-    }
+	    if(temp.nextRiver==nullptr)
+	    {
+	    	cout<<"test 2"<<endl;
+	    	cout<<temp.riverName<<endl;
+	      displayEntireRiver(temp.riverName,4);
+	    }
+	    else if(temp.nextRiver!=nullptr)
+	    {
+	    	cout<<"test 3"<<endl;
+	      while(temp.nextRiver!=nullptr)
+	      {
+	      	cout<<"test 4"<<endl;
+	        displayEntireRiver(temp.riverName,4);
+	        temp=*temp.nextRiver;
+	      }
+	    }
+	}
   }
 }
 
@@ -292,6 +304,7 @@ int main()
       }
     }
   }
+  Source.addLevels();
   Source.printAll();
   cout<<"Welcome to RiverSource!"<<endl;
 	cout<<"================================"<<endl;
@@ -314,7 +327,7 @@ while (!done)
 		}
 		case 2:
 		{
-			//Source.addLevels();
+			
 
 			break;
 		}
