@@ -59,7 +59,9 @@ struct River
 	}
 	River()
 	{
-
+		this->riverName="NONAME";
+		this->firstSection=nullptr;
+		this->nextRiver=nullptr;
 	}
 };
 
