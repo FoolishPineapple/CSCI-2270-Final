@@ -144,7 +144,7 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)
 	}
 	else
 	{
-		
+		//ERROR HERE
 		while(temp2->secHashSec!=nullptr)
 		{
 			temp2=temp2->secHashSec;
