@@ -186,7 +186,7 @@ void RiverSource::addLevels()
 
 void RiverSource::displayEntireRiver(string riverName,int data)//working
 {
-	cout<<riverName<<endl;
+  cout<<riverName<<endl;
   River *displayRiver=searchRiver(riverName);
   cout<<displayRiver->riverName<<endl;
   cout<<"======================="<<endl;
@@ -194,7 +194,7 @@ void RiverSource::displayEntireRiver(string riverName,int data)//working
 
   while(currentSection!=nullptr)
   {
-    currentSection=currentSection->nextSection;
+    //currentSection=currentSection->nextSection;
     if(data>=1)
     {
       cout<<currentSection->secName<<endl;
@@ -215,18 +215,17 @@ void RiverSource::displayEntireRiver(string riverName,int data)//working
     {
     cout<<"    |    "<<endl;
     cout<<"    V   "<<endl;
-	}
-	else
-	{
-		cout<<"END OF RIVER"<<endl;
-	}
+	  }
+	  else
+	  {
+		    cout<<"END OF RIVER"<<endl;
+	  }
+    currentSection=currentSection->nextSection;
   }
-
 }
 
 void RiverSource::printAll()//only printing one river
 {
-\
   for(int i=0;i<numberOfRivers;i++)
   {
     River *temp=&rivers[i];
