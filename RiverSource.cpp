@@ -14,7 +14,6 @@ RiverSource::RiverSource(int riverSize,int sectionSize)
   rivers=riverArray;
   sections=sectionArray;
 }
-
 RiverSource::~RiverSource()
 {
 
@@ -109,6 +108,7 @@ void RiverSource::addRiver(River *river)
 {
 	int key=hashRiver(river->riverName);
 	River *location=&rivers[key];
+	cout<<location->riverName<<endl;
 	if(location==nullptr)
 		{
 			location=river;
@@ -161,7 +161,8 @@ void RiverSource::addLevels()
 {
 		for(int i=0;i<numberOfSections;i++)
 			{
-				Section *currentSection=&sections[i];
+				Section *currentSection=new Section;
+				currentSection=&sections[i];
 				while(currentSection!=nullptr)
 				{
 					string waterLevelFile=currentSection->secName + ".txt";
@@ -179,6 +180,7 @@ void RiverSource::addLevels()
 						currentSection->levels[daysOfYear].day=stoi(word);
 						getline(s1, word, ',');
 						currentSection->levels[daysOfYear].waterLevel=stoi(word);
+						cout<<currentSection->levels[daysOfYear].waterLevel<<endl;
 						daysOfYear++;
 					}
 					currentSection=currentSection->secHashSec;
@@ -192,10 +194,6 @@ void RiverSource::displayEntireRiver(string riverName,int data)
   River *displayRiver=searchRiver(riverName);
 
   Section *currentSection=displayRiver->firstSection;
-  
-  cout<<riverName<<endl;
-  cout<<currentSection->secName<<endl;
-  cout<<"test 5"<<endl;
 
   while(currentSection!=nullptr)
   {
@@ -224,23 +222,25 @@ void RiverSource::displayEntireRiver(string riverName,int data)
 
 void RiverSource::printAll()
 {
+	 for(int i=0;i<15;i++)
+  {
+  	cout<<rivers[i].riverName<<endl;
+  }
   for(int i=0;i<numberOfRivers;i=i+1)
   {
+  	cout<<i<<endl;
     River temp=rivers[i];
     if (temp.riverName!="NONAME")
     {
+    	cout<<"here"<<endl;
 	    if(temp.nextRiver==nullptr)
 	    {
-	    	cout<<"test 2"<<endl;
-	    	cout<<temp.riverName<<endl;
 	      displayEntireRiver(temp.riverName,4);
 	    }
 	    else if(temp.nextRiver!=nullptr)
 	    {
-	    	cout<<"test 3"<<endl;
 	      while(temp.nextRiver!=nullptr)
 	      {
-	      	cout<<"test 4"<<endl;
 	        displayEntireRiver(temp.riverName,4);
 	        temp=*temp.nextRiver;
 	      }
@@ -248,7 +248,16 @@ void RiverSource::printAll()
 	}
   }
 }
-
+void RiverSource::showLevels(string name)
+{
+	Section *searched=searchSections(name);
+	for (int i=0;i<365;i++)
+	{
+		cout<<"here"<<endl;
+		int level=searched->levels[i].waterLevel;
+		cout<<level<<endl;
+	}
+}
 
 int main()
 {
@@ -304,14 +313,16 @@ int main()
       }
     }
   }
+
   Source.addLevels();
-  Source.printAll();
+  Source.showLevels("Shoshone");
   cout<<"Welcome to RiverSource!"<<endl;
 	cout<<"================================"<<endl;
 	string userChoice;
 	cout<<"Please select an option:"<<endl;
 	cout<<"1. Quit"<<endl;
-	cout<<"2. Load water level data"<<endl;
+	cout<<"2. Print a river"<<endl;
+	cout<<"3. Print all rivers"<<endl;
 	getline(cin, userChoice);
 	int choice=stoi(userChoice);
 	bool done=false;
@@ -327,11 +338,18 @@ while (!done)
 		}
 		case 2:
 		{
-			
+			  Source.printAll();
 
 			break;
 		}
 	}
+		cout<<"Please select an option:"<<endl;
+	cout<<"1. Quit"<<endl;
+	cout<<"2. Print a river"<<endl;
+	cout<<"3. Print all rivers"<<endl;
+	getline(cin,userChoice);
+	choice=stoi(userChoice);
+
 }
   return 0;
 }
