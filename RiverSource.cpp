@@ -49,6 +49,7 @@ int RiverSource::hashSection(string name)//working
 void RiverSource::mergeRivers(River* feeder, Section *mainStream)
 {
 	Section *temp=feeder->firstSection;
+
 	while (temp->nextSection!=nullptr)
 	{
 		temp=temp->nextSection;
@@ -111,18 +112,24 @@ void RiverSource::addRiver(River *river)//working
 void RiverSource::addSection(River *name, Section* sectionToAdd)
 {
 	int key=hashRiver(name->riverName);
+	River *tempRiv=&rivers[key];
+	while(tempRiv->riverName!=name->riverName)
+	{
+		tempRiv=tempRiv->nextRiver;
+	}
+
 	Section *temp=new Section;
-	temp=rivers[key].firstSection;
+	temp=tempRiv->firstSection;
 	if (temp==nullptr)
 	{
-		rivers[key].firstSection=sectionToAdd;
+		tempRiv->firstSection=sectionToAdd;
 	}
 	else
 	{
-	while (temp->nextSection!=nullptr)
-		{
-			temp=temp->nextSection;
-		}
+		while (temp->nextSection!=nullptr)
+			{
+				temp=temp->nextSection;
+			}
 	    temp->nextSection=sectionToAdd;
 	}
 	int key2=hashSection(sectionToAdd->secName);
@@ -179,8 +186,10 @@ void RiverSource::addLevels()
 
 void RiverSource::displayEntireRiver(string riverName,int data)
 {
+	cout<<riverName<<endl;
   River *displayRiver=searchRiver(riverName);
-
+  cout<<displayRiver->riverName<<endl;
+  cout<<"======================="<<endl;
   Section *currentSection=displayRiver->firstSection;
 
   while(currentSection!=nullptr)
@@ -192,18 +201,25 @@ void RiverSource::displayEntireRiver(string riverName,int data)
     }
     if(data>=2&&data!=5)
     {
-      cout<<currentSection->rapidClass<<endl;
+      cout<<"Class: "<<currentSection->rapidClass<<endl;
     }
     if(data>=3)
     {
-      cout<<currentSection->sectionLength<<endl;
+      cout<<"Length: "<<currentSection->sectionLength<<" miles"<<endl;
     }
     if(data>=4&&data!=5)
     {
-      cout<<currentSection->bestWaterLevel<<endl;
+      cout<<"Best water level: "<<currentSection->bestWaterLevel<<" cfs"<<endl;
     }
+    if(currentSection->nextSection!=nullptr)
+    {
     cout<<"    |    "<<endl;
     cout<<"    V   "<<endl;
+	}
+	else
+	{
+		cout<<"END OF RIVER"<<endl;
+	}
   }
 
 }
@@ -219,7 +235,7 @@ void RiverSource::printAll()
     River temp=rivers[i];
     if (temp.riverName!="NONAME")
     {
-    	cout<<"here"<<endl;
+    	//cout<<"here"<<endl;
 	    if(temp.nextRiver==nullptr)
 	    {
 	      displayEntireRiver(temp.riverName,4);
@@ -326,10 +342,10 @@ int main()
       }
     }
   }
-
-  Source.displayEntireRiver("Colorado", 1);
+  //workin^^^
+   Source.showSections();
   Source.addLevels();
-  Source.showSections();
+ 
   Source.showLevels("Shoshone");
   cout<<"Welcome to RiverSource!"<<endl;
 	cout<<"================================"<<endl;
@@ -353,7 +369,19 @@ while (!done)
 		}
 		case 2:
 		{
-			  Source.printAll();
+			string menuChoice;
+			string settingChoice;
+			cout<<"Please enter the name of the river: ";
+			getline(cin, menuChoice);
+			cout<<"Options:"<<endl;
+			cout<<"1. Display only section names."<<endl;
+			cout<<"2. Display section names and class."<<endl;
+			cout<<"3. Display section names, class, and length."<<endl;
+			cout<<"Display section names, class, length, and best water level."<<endl;
+			cout<<"Choice: ";
+			getline(cin, settingChoice);
+			int settingNumber=stoi(settingChoice);
+			Source.displayEntireRiver(menuChoice, settingNumber);
 
 			break;
 		}
