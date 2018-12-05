@@ -5,7 +5,7 @@
 #include <sstream>
 using namespace std;
 
-RiverSource::RiverSource(int riverSize,int sectionSize)
+RiverSource::RiverSource(int riverSize,int sectionSize)//working
 {
   numberOfRivers=riverSize;
   numberOfSections=sectionSize;
@@ -19,12 +19,12 @@ RiverSource::~RiverSource()
 
 }
 
-int RiverSource::getRiverSize()
+int RiverSource::getRiverSize()//working
 {
   return  numberOfRivers;
 }
 
-int RiverSource::hashRiver(string name)
+int RiverSource::hashRiver(string name)//working
 {
 	int key=0;
 	for (int i=0;i<name.size();i++)
@@ -32,9 +32,10 @@ int RiverSource::hashRiver(string name)
 		key+=int(name[i]);
 	}
 	key=key%numberOfRivers;
+
 	return key;
 }
-int RiverSource::hashSection(string name)
+int RiverSource::hashSection(string name)//working
 {
 	int key=0;
 	for (int i=0;i<name.size();i++)
@@ -54,7 +55,7 @@ void RiverSource::mergeRivers(River* feeder, Section *mainStream)
 	}
 	temp->nextSection=mainStream;
 }
-River* RiverSource::searchRiver(string name)
+River* RiverSource::searchRiver(string name)//working
 {
 	int key= hashRiver(name);
 	River *current=&rivers[key];
@@ -86,7 +87,7 @@ Section* RiverSource::searchSections(string name)
   }
 	return nullptr;
 }
-void RiverSource::addRiver(River *river)
+void RiverSource::addRiver(River *river)//working
 {
 	int key=hashRiver(river->riverName);
 	River *location=new River;
@@ -110,11 +111,11 @@ void RiverSource::addRiver(River *river)
 void RiverSource::addSection(River *name, Section* sectionToAdd)
 {
 	int key=hashRiver(name->riverName);
-	Section temp=new Section;
-	temp=&rivers[key].firstSection;
+	Section *temp=new Section;
+	temp=rivers[key].firstSection;
 	if (temp==nullptr)
 	{
-		temp=sectionToAdd;
+		rivers[key].firstSection=sectionToAdd;
 	}
 	else
 	{
@@ -124,9 +125,8 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)
 		}
 	    temp->nextSection=sectionToAdd;
 	}
-
 	int key2=hashSection(sectionToAdd->secName);
-	Section temp2=new Section;
+	Section *temp2=new Section;
 	temp2=&sections[key2];
 	if(temp2==nullptr)
 	{
@@ -143,28 +143,33 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)
 }
 void RiverSource::addLevels()
 {
-		for(int i=0;i<numberOfSections;i++)
+	for(int i=0;i<numberOfSections;i++)
+		{
+			Section *currentSection=new Section;
+			currentSection=&sections[i];
+			while(currentSection!=nullptr)
 			{
-				Section *currentSection=new Section;
-				currentSection=&sections[i];
-				while(currentSection!=nullptr)
+				string waterLevelFile=currentSection->secName + ".txt";
+				ifstream levelFile(waterLevelFile);
+				string line;
+				int daysOfYear=0;
+				WaterLevel *addLevel=new WaterLevel[365];
+				while(getline(levelFile, line))
 				{
-					string waterLevelFile=currentSection->secName + ".txt";
-					ifstream levelFile(waterLevelFile);
-					string line;
-					int daysOfYear=0;
-					while(getline(levelFile, line))
+					stringstream s1;
+					s1<<line;
+					string word;
+					getline(s1, word, ',');
+					addLevel[i].month=stoi(word);
+					getline(s1, word, ',');
+					addLevel[i].day=stoi(word);
+					getline(s1, word);
+					addLevel[i].waterLevel=stoi(word);
+					daysOfYear++;
+					}
+					for (int i=0;i<365;i++)
 					{
-						stringstream s1;
-						s1<<line;
-						string word;
-						getline(s1, word, ',');
-						currentSection->levels[daysOfYear].month=stoi(word);
-						getline(s1, word, ',');
-						currentSection->levels[daysOfYear].day=stoi(word);
-						getline(s1, word, ',');
-						currentSection->levels[daysOfYear].waterLevel=stoi(word);
-						daysOfYear++;
+						currentSection->levels[i]=addLevel[i];
 					}
 					currentSection=currentSection->secHashSec;
 				}
@@ -211,7 +216,6 @@ void RiverSource::printAll()
   }
   for(int i=0;i<numberOfRivers;i=i+1)
   {
-  	cout<<i<<endl;
     River temp=rivers[i];
     if (temp.riverName!="NONAME")
     {
@@ -236,8 +240,7 @@ void RiverSource::showLevels(string name)
 	Section *searched=searchSections(name);
 	for (int i=0;i<365;i++)
 	{
-		cout<<"here"<<endl;
-		cout<<searched->secName<<endl;
+		cout<<"SEG FAULT HERE"<<endl;	
 		cout<<searched->levels[i].waterLevel<<endl;
 		int level=searched->levels[i].waterLevel;
 		cout<<level<<endl;
@@ -252,11 +255,12 @@ void RiverSource::showSections()
 		{
 			cout<<temp->secName<<"->";
 			temp=temp->nextSection;
+
 		}
 		cout<<temp->secName<<endl;
 	}
 }
-void RiverSource::showRivers()
+void RiverSource::showRivers()//working
 {
 	for (int i=0;i<numberOfRivers;i++)
 	{
@@ -275,7 +279,7 @@ int main()
   ifstream riverFile("riverRead.txt");
   string line;
   string riverName;
-  string secName;
+  string sectionName;
   string c;
   double length;
   int bestFlow;
@@ -298,13 +302,11 @@ int main()
         Source.addRiver(riverExist);
       }
       getline(ss,word,',');
-      secName=word;
-      sectionExist=Source.searchSections(secName);
+      sectionName=word;
+      sectionExist=Source.searchSections(sectionName);
       if(sectionExist==nullptr)
       {
-        Section *temp=new Section;
-        temp->riverName=riverName;
-        temp->secName=secName;
+        Section *temp=new Section(sectionName,riverName);
         getline(ss,word,',');
         c=word;
         temp->rapidClass=c;
@@ -324,7 +326,8 @@ int main()
       }
     }
   }
-  Source.showRivers();
+
+  Source.displayEntireRiver("Colorado", 1);
   Source.addLevels();
   Source.showSections();
   Source.showLevels("Shoshone");
@@ -333,7 +336,7 @@ int main()
 	string userChoice;
 	cout<<"Please select an option:"<<endl;
 	cout<<"1. Quit"<<endl;
-	cout<<"2. Print a river"<<endl;
+	cout<<"2. Print a rivers"<<endl;
 	cout<<"3. Print all rivers"<<endl;
 	getline(cin, userChoice);
 	int choice=stoi(userChoice);
@@ -354,10 +357,15 @@ while (!done)
 
 			break;
 		}
+		case 3:
+		{
+		  Source.showRivers();
+		  break;
+		}
 	}
 		cout<<"Please select an option:"<<endl;
 	cout<<"1. Quit"<<endl;
-	cout<<"2. Print a river"<<endl;
+	cout<<"2. Print all rivers"<<endl;
 	cout<<"3. Print all rivers"<<endl;
 	getline(cin,userChoice);
 	choice=stoi(userChoice);
