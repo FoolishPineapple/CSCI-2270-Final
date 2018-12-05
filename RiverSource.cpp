@@ -109,7 +109,7 @@ void RiverSource::addRiver(River *river)//working
 	}
 
 }
-void RiverSource::addSection(River *name, Section* sectionToAdd)
+void RiverSource::addSection(River *name, Section* sectionToAdd)//working
 {
 	int key=hashRiver(name->riverName);
 	River *tempRiv=&rivers[key];
@@ -132,15 +132,12 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)
 			}
 	    temp->nextSection=sectionToAdd;
 	}
-	//working^^^^^^
-	cout<<"test 1"<<endl;
 	int key2=hashSection(sectionToAdd->secName);
 	Section *temp2=new Section;
 	temp2=&sections[key2];
-	if(temp2->bestWaterLevel==0)
+	if(temp2->secName=="NONAME")
 	{
 		sections[key2]=*sectionToAdd;
-		cout<<sections[key2].secName<<endl;
 	}
 	else
 	{
@@ -149,7 +146,6 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)
 			temp2=temp2->secHashSec;
 		}
 		temp2->secHashSec=sectionToAdd;
-		cout<<"here 2"<<endl; // should we be adding *sectionToAdd instead like up above
 	}
 }
 void RiverSource::addLevels()
@@ -261,13 +257,16 @@ void RiverSource::showSections()
 	for (int i=0;i<numberOfSections;i++)
 	{
 		Section *temp=&sections[i];
-		while(temp->nextSection!=nullptr)
+		if(temp->secName!="NONAME")
 		{
-			cout<<temp->secName<<"->";
-			temp=temp->nextSection;
+			while(temp->secHashSec!=nullptr)
+			{
+				cout<<temp->secName<<"->";
+				temp=temp->secHashSec;
 
+			}
+			cout<<temp->secName<<endl;
 		}
-		cout<<temp->secName<<endl;
 	}
 }
 void RiverSource::showRivers()//working
