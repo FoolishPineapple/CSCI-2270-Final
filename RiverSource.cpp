@@ -44,23 +44,7 @@ int RiverSource::hashSection(string name)
 	key=key%numberOfSections;
 	return key;
 }
-// void RiverSource::buildSectionHash()
-// {
-// 	int key;
-// 	Section newSection;
-// 	for (int i=0;i<15;i++)
-// 	{
-//
-// 			Section *current=rivers[i].firstSection;
-// 			while (current!=nullptr)
-// 			{
-// 				key=hashSection(current->secName);
-// 				/////////////
-// 				current=current->nextSection;
-// 			}
-//
-// 	}
-// }
+
 void RiverSource::mergeRivers(River* feeder, Section *mainStream)
 {
 	Section *temp=feeder->firstSection;
@@ -88,7 +72,7 @@ River* RiverSource::searchRiver(string name)
 Section* RiverSource::searchSections(string name)
 {
 	int key=hashSection(name);
-
+	Section *current=&sections[key];
   if(current!=NULL)
   {
     while(current->secName!=name && current->nextSection!=NULL)
@@ -126,7 +110,8 @@ void RiverSource::addRiver(River *river)
 void RiverSource::addSection(River *name, Section* sectionToAdd)
 {
 	int key=hashRiver(name->riverName);
-	Section *temp=rivers[key].firstSection;
+	Section temp=new Section;
+	temp=&rivers[key].firstSection;
 	if (temp==nullptr)
 	{
 		temp=sectionToAdd;
@@ -141,14 +126,14 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)
 	}
 
 	int key2=hashSection(sectionToAdd->secName);
-	Section *temp2=&sections[key2];
+	Section temp2=new Section;
+	temp2=&sections[key2];
 	if(temp2==nullptr)
 	{
 		sections[key2]=*sectionToAdd;
 	}
 	else
 	{
-		//ERROR HERE
 		while(temp2->secHashSec!=nullptr)
 		{
 			temp2=temp2->secHashSec;
@@ -252,15 +237,36 @@ void RiverSource::showLevels(string name)
 	for (int i=0;i<365;i++)
 	{
 		cout<<"here"<<endl;
+		cout<<searched->secName<<endl;
+		cout<<searched->levels[i].waterLevel<<endl;
 		int level=searched->levels[i].waterLevel;
 		cout<<level<<endl;
 	}
 }
+void RiverSource::showSections()
+{
+	for (int i=0;i<numberOfSections;i++)
+	{
+		Section *temp=&sections[i];
+		while(temp->nextSection!=nullptr)
+		{
+			cout<<temp->secName<<"->";
+			temp=temp->nextSection;
+		}
+		cout<<temp->secName<<endl;
+	}
+}
 void RiverSource::showRivers()
 {
-	for (int i=0;i<15;i++)
+	for (int i=0;i<numberOfRivers;i++)
 	{
-		while
+		River *temp=&rivers[i];
+		while(temp->nextRiver!=nullptr)
+		{
+			cout<<temp->riverName<<"->";
+			temp=temp->nextRiver;
+		}
+		cout<<temp->riverName<<endl;
 	}
 }
 int main()
@@ -318,8 +324,9 @@ int main()
       }
     }
   }
-
+  Source.showRivers();
   Source.addLevels();
+  Source.showSections();
   Source.showLevels("Shoshone");
   cout<<"Welcome to RiverSource!"<<endl;
 	cout<<"================================"<<endl;
