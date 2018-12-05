@@ -133,7 +133,11 @@ class RiverSource
 
 		void printAll();
 
+		void showLevels(string name);
+		
+		void showRivers();
 
+		void showSections();
 
 	private:
 		int numberOfRivers;
