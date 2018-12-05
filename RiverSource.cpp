@@ -88,8 +88,7 @@ River* RiverSource::searchRiver(string name)
 Section* RiverSource::searchSections(string name)
 {
 	int key=hashSection(name);
-	Section *current=&sections[key];
-	//cout<<current->secName<<endl;
+
   if(current!=NULL)
   {
     while(current->secName!=name && current->nextSection!=NULL)
@@ -101,17 +100,16 @@ Section* RiverSource::searchSections(string name)
   		current=current->nextSection;
   	}
   }
-	//cout<<"section not found"<<endl;
 	return nullptr;
 }
 void RiverSource::addRiver(River *river)
 {
 	int key=hashRiver(river->riverName);
-	River *location=&rivers[key];
-	cout<<location->riverName<<endl;
-	if(location==nullptr)
+	River *location=new River;
+	location=&rivers[key];
+	if(location->riverName=="NONAME")
 		{
-			location=river;
+			rivers[key]=*river;
 		}
 	else
 	{
@@ -119,7 +117,9 @@ void RiverSource::addRiver(River *river)
 		{
 			location=location->nextRiver;
 		}
-		location->nextRiver=river;
+		River *lastRiv=searchRiver(location->riverName);
+		lastRiv->nextRiver=river;
+		
 	}
 
 }
@@ -127,7 +127,6 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)
 {
 	int key=hashRiver(name->riverName);
 	Section *temp=rivers[key].firstSection;
-	//cout<<temp<<endl;
 	if (temp==nullptr)
 	{
 		temp=sectionToAdd;
@@ -180,7 +179,6 @@ void RiverSource::addLevels()
 						currentSection->levels[daysOfYear].day=stoi(word);
 						getline(s1, word, ',');
 						currentSection->levels[daysOfYear].waterLevel=stoi(word);
-						cout<<currentSection->levels[daysOfYear].waterLevel<<endl;
 						daysOfYear++;
 					}
 					currentSection=currentSection->secHashSec;
@@ -224,7 +222,7 @@ void RiverSource::printAll()
 {
 	 for(int i=0;i<15;i++)
   {
-  	cout<<rivers[i].riverName<<endl;
+
   }
   for(int i=0;i<numberOfRivers;i=i+1)
   {
@@ -258,7 +256,13 @@ void RiverSource::showLevels(string name)
 		cout<<level<<endl;
 	}
 }
-
+void RiverSource::showRivers()
+{
+	for (int i=0;i<15;i++)
+	{
+		while
+	}
+}
 int main()
 {
   RiverSource Source(15,20);
@@ -284,6 +288,7 @@ int main()
       if(riverExist==nullptr)
       {
         riverExist= new River(riverName);
+        
         Source.addRiver(riverExist);
       }
       getline(ss,word,',');
