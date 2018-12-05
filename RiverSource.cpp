@@ -132,12 +132,14 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)
 			}
 	    temp->nextSection=sectionToAdd;
 	}
+	//working^^^^^^
 	int key2=hashSection(sectionToAdd->secName);
 	Section *temp2=new Section;
 	temp2=&sections[key2];
 	if(temp2==nullptr)
 	{
 		sections[key2]=*sectionToAdd;
+		cout<<sections[key2].secName<<endl;
 	}
 	else
 	{
@@ -184,7 +186,7 @@ void RiverSource::addLevels()
 
 }
 
-void RiverSource::displayEntireRiver(string riverName,int data)
+void RiverSource::displayEntireRiver(string riverName,int data)//working
 {
 	cout<<riverName<<endl;
   River *displayRiver=searchRiver(riverName);
@@ -224,30 +226,20 @@ void RiverSource::displayEntireRiver(string riverName,int data)
 
 }
 
-void RiverSource::printAll()
+void RiverSource::printAll()//only printing one river
 {
-	 for(int i=0;i<15;i++)
+\
+  for(int i=0;i<numberOfRivers;i++)
   {
-
-  }
-  for(int i=0;i<numberOfRivers;i=i+1)
-  {
-    River temp=rivers[i];
-    if (temp.riverName!="NONAME")
+    River *temp=&rivers[i];
+    if (temp->riverName!="NONAME")
     {
-    	//cout<<"here"<<endl;
-	    if(temp.nextRiver==nullptr)
-	    {
-	      displayEntireRiver(temp.riverName,4);
-	    }
-	    else if(temp.nextRiver!=nullptr)
-	    {
-	      while(temp.nextRiver!=nullptr)
+	      while(temp->nextRiver!=nullptr)
 	      {
-	        displayEntireRiver(temp.riverName,4);
-	        temp=*temp.nextRiver;
+	        displayEntireRiver(temp->riverName,4);
+	        temp=temp->nextRiver;
 	      }
-	    }
+	      displayEntireRiver(temp->riverName,4);
 	}
   }
 }
@@ -281,12 +273,15 @@ void RiverSource::showRivers()//working
 	for (int i=0;i<numberOfRivers;i++)
 	{
 		River *temp=&rivers[i];
-		while(temp->nextRiver!=nullptr)
+		if(temp->riverName!="NONAME")
 		{
-			cout<<temp->riverName<<"->";
-			temp=temp->nextRiver;
-		}
+			while(temp->nextRiver!=nullptr)
+			{
+				cout<<temp->riverName<<"->";
+				temp=temp->nextRiver;
+			}
 		cout<<temp->riverName<<endl;
+		}
 	}
 }
 int main()
@@ -343,7 +338,8 @@ int main()
     }
   }
   //workin^^^
-   Source.showSections();
+  Source.printAll();
+  Source.showSections();
   Source.addLevels();
  
   Source.showLevels("Shoshone");
