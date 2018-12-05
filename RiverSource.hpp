@@ -43,7 +43,10 @@ struct Section
 	}
 	Section()
 	{
-
+		this->secName="NONAME";
+		this->nextSection=nullptr;
+		this->secHashSec=nullptr;
+		this->bestWaterLevel=0;
 	}
 };
 struct River
