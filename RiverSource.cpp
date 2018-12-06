@@ -202,6 +202,13 @@ int RiverSource::getDayOfYear(int day, int month)
 	}
 	return dayOfYear;
 }
+double RiverSource::getRelativeLevel(Section *currentSection, int level)
+{
+  double bestLevel=currentSection->bestWaterLevel;
+  double dlevel=level;
+  double relativeLevel=abs(level-bestLevel)/bestLevel;
+  return relativeLevel;
+}
 void RiverSource::addLevels()
 {
 
@@ -239,6 +246,8 @@ void RiverSource::addLevels()
 				string line;
 				int curDay;
 				int curMonth;
+				int curLevel;
+				double curRel;
 				int dayOfYear=0;
 				int firstDay=0;
 				while(getline(levelFile, line) && dayOfYear<=365)
@@ -258,10 +267,10 @@ void RiverSource::addLevels()
 					firstDay=dayOfYear=getDayOfYear(curDay,curMonth);
 					}
 					getline(s1, word);
-					addLevel2->waterLevel=stoi(word);
-          double rLevel=getRelativeLevel(currentSection,stoi(word));
-          //cout<<rLevel<<endl;
-          addLevel2->relativeLevel=rLevel;
+					curLevel=stoi(word);
+					addLevel2->waterLevel=curLevel;
+          			curRel=getRelativeLevel(currentSection,curLevel);
+          			addLevel2->relativeLevel=curRel;
 					currentSection->levels[dayOfYear]=addLevel2;
 					dayOfYear++;
 
@@ -332,6 +341,7 @@ void RiverSource::showLevels(string name)
 {
 	Section *searched=searchSections(name);
 	cout<<"====================="<<endl;
+	cout<<'\n';
 	for (int i=0;i<=365;i++)
 	{
 		cout<<searched->levels[i]->month<<",";
@@ -341,6 +351,9 @@ void RiverSource::showLevels(string name)
 }
 void RiverSource::showSections()
 {
+	cout<<'\n';
+	cout<<"All loaded sections"<<endl;
+	cout<<"+++++++++++++++++++++++++"<<endl;
 	for (int i=0;i<numberOfSections;i++)
 	{
 		Section *temp=&sections[i];
@@ -348,7 +361,7 @@ void RiverSource::showSections()
 		{
 			while(temp->secHashSec!=nullptr)
 			{
-				cout<<temp->secName<<"->";
+				cout<<temp->secName<<endl;//"->";
 				temp=temp->secHashSec;
 
 			}
@@ -358,6 +371,9 @@ void RiverSource::showSections()
 }
 void RiverSource::showRivers()//working
 {
+	cout<<'\n';
+	cout<<"All loaded rivers"<<endl;
+	cout<<"+++++++++++++++++++++++++"<<endl;
 	for (int i=0;i<numberOfRivers;i++)
 	{
 		River *temp=&rivers[i];
@@ -365,7 +381,7 @@ void RiverSource::showRivers()//working
 		{
 			while(temp->nextRiver!=nullptr)
 			{
-				cout<<temp->riverName<<"->";
+				cout<<temp->riverName<<endl;//"->";
 				temp=temp->nextRiver;
 			}
 		cout<<temp->riverName<<endl;
@@ -373,13 +389,7 @@ void RiverSource::showRivers()//working
 	}
 }
 
-double RiverSource::getRelativeLevel(Section *currentSection, int level)
-{
-  double bestLevel=currentSection->bestWaterLevel;
-  double dlevel=level;
-  double relativeLevel=abs(level-bestLevel)/bestLevel;
-  return relativeLevel;
-}
+
 
 WaterLevel RiverSource::getBestDay(Section *currentSection)
 {
@@ -417,6 +427,69 @@ WaterLevel RiverSource::getBestDay(Section *currentSection)
   return *min;
 }
 
+// Section* RiverSource::getBestSection(int date)
+// {
+// 	Section *temp;
+// 	Section *curBest;
+// 	for(int i=0;i<numberOfSections)
+
+// }
+int RiverSource::convertClass(string rapClass)
+{
+	int converted;
+	if(rapClass=="I")
+	{
+		converted=1;
+	}
+	else if(rapClass=="II")
+	{
+		converted=2;
+	}
+	else if(rapClass=="III")
+	{
+		converted=3;
+	}
+	else if(rapClass=="IV")
+	{
+		converted=4;
+	}
+	else if(rapClass=="V")
+	{
+		converted=25;
+	}
+	return converted;
+}
+void RiverSource::findMySection(double mileage, string rapClass)
+{
+	Section *temp;
+	double low=mileage-(mileage*.2);
+	double high=mileage+(mileage*.2);
+	bool foundSec=false;
+	for(int i=0; i<numberOfSections;i++)
+	{
+		temp=&sections[i];
+		while(temp!=nullptr)
+		{
+			if(convertClass(temp->rapidClass)==convertClass(rapClass)||convertClass(temp->rapidClass)==convertClass(rapClass)-1)
+			{
+				if(temp->sectionLength>=low&&temp->sectionLength<=high)
+				{
+					cout<<"River: "<<temp->riverName<<endl;
+					cout<<"Section: "<<temp->secName<<endl;
+					cout<<"Class: "<<temp->rapidClass<<endl;
+					cout<<"Length: "<<temp->sectionLength<<" miles"<<endl;
+					cout<<'\n';
+					foundSec=true;
+				}
+			}
+			temp=temp->secHashSec;
+		}
+	}
+	if(!foundSec)
+	{
+		cout<<"No section found within given parameters"<<endl;
+	}
+}
 int main()
 {
   RiverSource Source(15,20);
@@ -473,12 +546,7 @@ int main()
   //workin^^^
 
   Source.addLevels();
-  cout<<"here"<<endl;
-  River *test=Source.searchRiver("Gunnison River");
-  WaterLevel best=Source.getBestDay(test->firstSection);
-  cout<<"best flow:"<<test->firstSection->bestWaterLevel<<endl;
-  cout<<best.month<<"/"<<best.day<<endl;
-  cout<<best.waterLevel<<endl;
+  cout<<string(50,'\n');
   cout<<"Welcome to RiverSource!"<<endl;
 	cout<<"================================"<<endl;
 	string userChoice;
@@ -488,6 +556,8 @@ int main()
 	cout<<"3. Print all rivers"<<endl;
 	cout<<"4. Show all sections"<<endl;
 	cout<<"5. Show best day for a section"<<endl;
+	cout<<"6. Show the projected level of a section of a specific day"<<endl;
+	cout<<"7. Find me a section"<<endl;
 	getline(cin, userChoice);
 	int choice=stoi(userChoice);
 	bool done=false;
@@ -513,6 +583,7 @@ while (!done)
 			cout<<"3. Display section names, class, and length."<<endl;
 			cout<<"4. Display section names, class, length, and best water level."<<endl;
 			cout<<"Choice: ";
+			cout<<"\n";
 			getline(cin, settingChoice);
 			int settingNumber=stoi(settingChoice);
 			Source.displayEntireRiver(menuChoice, settingNumber);
@@ -545,15 +616,54 @@ while (!done)
   			cout<<"\n";
   			break;
   		}
+  		case 6:
+  		{
+  			cout<<'\n';
+  			string sectionChoice;
+  			string dateChoice;
+  			int day;
+  			int month;
+  			cout<<"Please enter a section that you would like to view: ";
+  			getline(cin,sectionChoice);
+  			cout<<"Please enter a month numerically: ";
+  			getline(cin, dateChoice);
+  			month=stoi(dateChoice);
+  			cout<<"Please enter a day numerically: ";
+  			getline(cin, dateChoice);
+  			day=stoi(dateChoice);
+  			int dateIndex=Source.getDayOfYear(day, month);
+  			Section *requestedSection=Source.searchSections(sectionChoice);
+  			cout<<"\n";
+  			cout<<"On "<<month<<"/"<<day<<" "<<sectionChoice<<" is projected to be at "<<requestedSection->levels[dateIndex]->waterLevel<<" cfs"<<endl;
+  			break;
+  		}
+  		case 7:
+  		{
+  			string userChoice;
+  			int length;
+  			cout<<'\n';
+  			cout<<"Please enter the length of the section (in miles) you would like to run: ";
+  			getline(cin,userChoice);
+  			length=stoi(userChoice);
+  			cout<<"Please enter the class of the rapid you would like to run: ";
+  			getline(cin,userChoice);
+  			cout<<'\n';
+  			Source.findMySection(length, userChoice);
+  			break;
+  		}
 	}
 	if(!done)
 	{
+	cout<<"\n";
+	cout<<"================================"<<endl;
 	cout<<"Please select an option:"<<endl;
 	cout<<"1. Quit"<<endl;
 	cout<<"2. Print a rivers"<<endl;
 	cout<<"3. Print all rivers"<<endl;
 	cout<<"4. Show all sections"<<endl;
 	cout<<"5. Show best day for a section"<<endl;
+	cout<<"6. Show the projected level of a section of a specific day"<<endl;
+	cout<<"7. Find me a section"<<endl;
 	getline(cin,userChoice);
 	choice=stoi(userChoice);
 	}
