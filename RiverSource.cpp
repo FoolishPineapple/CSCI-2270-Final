@@ -149,9 +149,62 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)//working
 		temp2->secHashSec=sectionToAdd;
 	}
 }
+int RiverSource::getDayOfYear(int day, int month)
+{
+	int dayOfYear= -1;
+	if(month==1)
+	{
+		dayOfYear+=day;
+	}
+	else if(month==2)
+	{
+		dayOfYear+=day+31;
+	}
+	else if(month==3)
+	{
+		dayOfYear+=day+60;
+	}
+	else if(month==4)
+	{
+		dayOfYear+=day+90;
+	}
+	else if(month==5)
+	{
+		dayOfYear+=day+121;
+	}
+	else if(month==6)
+	{
+		dayOfYear+=day+151;
+	}
+	else if(month==7)
+	{
+		dayOfYear+=day+182;
+	}
+	else if(month==8)
+	{
+		dayOfYear+=day+213;
+	}
+	else if(month==9)
+	{
+		dayOfYear+=day+243;
+	}
+	else if(month==10)
+	{
+		dayOfYear+=day+274;
+	}
+	else if(month==11)
+	{
+		dayOfYear+=day+304;
+	}
+	else if(month==12)
+	{
+		dayOfYear+=day+333;
+	}
+	return dayOfYear;
+}
 void RiverSource::addLevels()
 {
-for(int i=0;i<numberOfSections;i++)
+	for(int i=0;i<numberOfSections;i++)
 	{
 		Section *currentSection;
 		currentSection=&sections[i];
@@ -163,30 +216,42 @@ for(int i=0;i<numberOfSections;i++)
 				cout<<waterLevelFile<<endl;
 				ifstream levelFile(waterLevelFile);
 				string line;
-				int daysOfYear=0;
-				
-				while(getline(levelFile, line) && daysOfYear<=365)
+				int curDay;
+				int curMonth;
+				int dayOfYear=0;
+				int firstDay=0;
+				while(getline(levelFile, line) && dayOfYear<=365)
 				{
+					
 					WaterLevel *addLevel=new WaterLevel;
 					stringstream s1;
 					s1<<line;
 					string word;
 					getline(s1, word, ',');
 					addLevel->month=stoi(word);
+					curMonth=stoi(word);
 					getline(s1, word, ',');
 					addLevel->day=stoi(word);
+					curDay=stoi(word);
+					if(dayOfYear==0&&curMonth!=1)
+					{
+					firstDay=dayOfYear=getDayOfYear(curDay,curMonth);
+					}
 					getline(s1, word);
 					addLevel->waterLevel=stoi(word);
-					currentSection->levels[daysOfYear]=addLevel;
-					daysOfYear++;
+					currentSection->levels[dayOfYear]=addLevel;
+					dayOfYear++;
+
 				}
-				for(int i=0;i<365;i++)
+				for(int i=firstDay;i<=365;i++)
 				{
+					cout<<"test 3"<<endl;
+					cout<<i<<endl;
 					cout<<currentSection->levels[i]->waterLevel<<endl;
 				}
-				//cout<<currentSection->secHashSec->secName<<endl;					
+				cout<<"test 1"<<endl;				
 				currentSection=currentSection->secHashSec;
-				cout<<"test 1"<<endl;
+				cout<<"test 2"<<endl;
 
 			}
 		}
@@ -326,6 +391,7 @@ WaterLevel RiverSource::getBestDay(Section *currentSection)
       }
     }
   }
+  return *min;
 }
 
 int main()
@@ -383,7 +449,7 @@ int main()
   }
   //workin^^^
   Source.showSections();
-  //Source.addLevels();
+  Source.addLevels();
   Source.showLevels("Shoshone");
   cout<<"Welcome to RiverSource!"<<endl;
 	cout<<"================================"<<endl;
