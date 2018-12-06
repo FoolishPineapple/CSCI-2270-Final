@@ -86,7 +86,6 @@ Section* RiverSource::searchSections(string name)
   		current=current->secHashSec;
   	}
   }
-  cout<<"NO SECTION"<<endl;
 	return nullptr;
 }
 void RiverSource::addRiver(River *river)//working
@@ -204,6 +203,7 @@ int RiverSource::getDayOfYear(int day, int month)
 }
 void RiverSource::addLevels()
 {
+	
 	for(int i=0;i<numberOfSections;i++)
 	{
 		Section *currentSection;
@@ -214,6 +214,26 @@ void RiverSource::addLevels()
 			{
 				string waterLevelFile=currentSection->secName + ".txt";
 				cout<<waterLevelFile<<endl;
+				ifstream defaultFile("default.txt");
+				string line2;
+				int counter=0;
+				while(getline(defaultFile,line2)&&counter<365)
+				{
+					int day1;
+					int month1;
+					stringstream ss;
+					ss<<line2;
+					string word;
+					getline(ss,word,',');
+					cout<<word<<endl;
+					month1=stoi(word);
+					getline(ss,word);
+					day1=stoi(word);
+					currentSection->levels[counter]->month=month1;
+					currentSection->levels[counter]->day=day1;
+					currentSection->levels[counter]->waterLevel=0;
+					counter++;
+				}
 				ifstream levelFile(waterLevelFile);
 				string line;
 				int curDay;
@@ -224,6 +244,7 @@ void RiverSource::addLevels()
 				{
 					
 					WaterLevel *addLevel=new WaterLevel;
+
 					stringstream s1;
 					s1<<line;
 					string word;
