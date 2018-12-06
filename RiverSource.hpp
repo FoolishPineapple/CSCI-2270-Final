@@ -23,8 +23,7 @@ struct WaterLevel
 		this->day=0;
 		this->month=0;
 		this->waterLevel=0;
-		this->relativeLevel=0.0;
-		this->relativeLevel=2;
+		this->relativeLevel=200.0;
 		this->best=nullptr;
 	}
 };
@@ -161,6 +160,8 @@ class RiverSource
 		void findMySection(double mileage, string rapClass);
 
 		int convertClass(string rapClass);
+
+		void tripPlanner(string startingSection,double mileage);
 
 	private:
 		int numberOfRivers;
