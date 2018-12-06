@@ -75,17 +75,18 @@ Section* RiverSource::searchSections(string name)
 {
 	int key=hashSection(name);
 	Section *current=&sections[key];
-  if(current!=NULL)
+  if(current->secName!="NONAME")
   {
-    while(current->secName!=name && current->nextSection!=NULL)
+    while(current!=nullptr)
   	{
   		if (current->secName==name)
   			{
   				return current;
   			}
-  		current=current->nextSection;
+  		current=current->secHashSec;
   	}
   }
+  cout<<"NO SECTION"<<endl;
 	return nullptr;
 }
 void RiverSource::addRiver(River *river)//working
@@ -150,43 +151,50 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)//working
 }
 void RiverSource::addLevels()
 {
-	for(int i=0;i<numberOfSections;i++)
+for(int i=0;i<numberOfSections;i++)
+	{
+		Section *currentSection;
+		currentSection=&sections[i];
+		if(currentSection->secName!="NONAME")
 		{
-			Section *currentSection=new Section;
-			currentSection=&sections[i];
 			while(currentSection!=nullptr)
 			{
 				string waterLevelFile=currentSection->secName + ".txt";
+				cout<<waterLevelFile<<endl;
 				ifstream levelFile(waterLevelFile);
 				string line;
 				int daysOfYear=0;
-				WaterLevel *addLevel=new WaterLevel[365];
-				while(getline(levelFile, line))
+				
+				while(getline(levelFile, line) && daysOfYear<=365)
 				{
+					WaterLevel *addLevel=new WaterLevel;
 					stringstream s1;
 					s1<<line;
 					string word;
 					getline(s1, word, ',');
-					addLevel[i].month=stoi(word);
+					addLevel->month=stoi(word);
 					getline(s1, word, ',');
-					addLevel[i].day=stoi(word);
+					addLevel->day=stoi(word);
 					getline(s1, word);
-					addLevel[i].waterLevel=stoi(word);
+					addLevel->waterLevel=stoi(word);
+					currentSection->levels[daysOfYear]=addLevel;
 					daysOfYear++;
-					}
-					for (int i=0;i<365;i++)
-					{
-						currentSection->levels[i]=addLevel[i];
-					}
-					currentSection=currentSection->secHashSec;
 				}
-			}
+				for(int i=0;i<365;i++)
+				{
+					cout<<currentSection->levels[i]->waterLevel<<endl;
+				}
+				//cout<<currentSection->secHashSec->secName<<endl;					
+				currentSection=currentSection->secHashSec;
+				cout<<"test 1"<<endl;
 
+			}
+		}
+	}
 }
 
 void RiverSource::displayEntireRiver(string riverName,int data)//working
 {
-  cout<<riverName<<endl;
   River *displayRiver=searchRiver(riverName);
   cout<<displayRiver->riverName<<endl;
   cout<<"======================="<<endl;
@@ -218,7 +226,7 @@ void RiverSource::displayEntireRiver(string riverName,int data)//working
 	  }
 	  else
 	  {
-		    cout<<"END OF RIVER"<<endl;
+		    cout<<'\n'<<endl;
 	  }
     currentSection=currentSection->nextSection;
   }
@@ -246,8 +254,8 @@ void RiverSource::showLevels(string name)
 	for (int i=0;i<365;i++)
 	{
 		cout<<"SEG FAULT HERE"<<endl;	
-		cout<<searched->levels[i].waterLevel<<endl;
-		int level=searched->levels[i].waterLevel;
+		cout<<searched->levels[i]->waterLevel<<endl;
+		int level=searched->levels[i]->waterLevel;
 		cout<<level<<endl;
 	}
 }
@@ -340,7 +348,6 @@ int main()
   //workin^^^
   Source.showSections();
   //Source.addLevels();
- 
   Source.showLevels("Shoshone");
   cout<<"Welcome to RiverSource!"<<endl;
 	cout<<"================================"<<endl;
@@ -388,7 +395,7 @@ while (!done)
 	}
 		cout<<"Please select an option:"<<endl;
 	cout<<"1. Quit"<<endl;
-	cout<<"2. Print all rivers"<<endl;
+	cout<<"2. Print a river"<<endl;
 	cout<<"3. Print all rivers"<<endl;
 	getline(cin,userChoice);
 	choice=stoi(userChoice);
