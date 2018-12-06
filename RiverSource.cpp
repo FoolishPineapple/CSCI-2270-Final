@@ -213,11 +213,11 @@ void RiverSource::addLevels()
 			while(currentSection!=nullptr)
 			{
 				string waterLevelFile=currentSection->secName + ".txt";
-				cout<<waterLevelFile<<endl;
 				ifstream defaultFile("default.txt");
 				string line2;
 				int counter=0;
-				while(getline(defaultFile,line2)&&counter<365)
+				WaterLevel *addLevel=new WaterLevel;
+				while(getline(defaultFile,line2)&&counter<=365)
 				{
 					int day1;
 					int month1;
@@ -225,13 +225,13 @@ void RiverSource::addLevels()
 					ss<<line2;
 					string word;
 					getline(ss,word,',');
-					cout<<word<<endl;
 					month1=stoi(word);
 					getline(ss,word);
 					day1=stoi(word);
-					currentSection->levels[counter]->month=month1;
-					currentSection->levels[counter]->day=day1;
-					currentSection->levels[counter]->waterLevel=0;
+					addLevel->month=month1;
+					addLevel->day=day1;
+					addLevel->waterLevel=0;
+					currentSection->levels[counter]=addLevel;
 					counter++;
 				}
 				ifstream levelFile(waterLevelFile);
@@ -242,37 +242,27 @@ void RiverSource::addLevels()
 				int firstDay=0;
 				while(getline(levelFile, line) && dayOfYear<=365)
 				{
-					
-					WaterLevel *addLevel=new WaterLevel;
-
+					WaterLevel *addLevel2=new WaterLevel;
 					stringstream s1;
 					s1<<line;
 					string word;
 					getline(s1, word, ',');
-					addLevel->month=stoi(word);
+					addLevel2->month=stoi(word);
 					curMonth=stoi(word);
 					getline(s1, word, ',');
-					addLevel->day=stoi(word);
+					addLevel2->day=stoi(word);
 					curDay=stoi(word);
 					if(dayOfYear==0&&curMonth!=1)
 					{
 					firstDay=dayOfYear=getDayOfYear(curDay,curMonth);
 					}
 					getline(s1, word);
-					addLevel->waterLevel=stoi(word);
-					currentSection->levels[dayOfYear]=addLevel;
+					addLevel2->waterLevel=stoi(word);
+					currentSection->levels[dayOfYear]=addLevel2;
 					dayOfYear++;
 
 				}
-				for(int i=firstDay;i<=365;i++)
-				{
-					cout<<"test 3"<<endl;
-					cout<<i<<endl;
-					cout<<currentSection->levels[i]->waterLevel<<endl;
-				}
-				cout<<"test 1"<<endl;				
 				currentSection=currentSection->secHashSec;
-				cout<<"test 2"<<endl;
 
 			}
 		}
@@ -337,12 +327,12 @@ void RiverSource::printAll()//only printing one river
 void RiverSource::showLevels(string name)
 {
 	Section *searched=searchSections(name);
-	for (int i=0;i<365;i++)
+	cout<<"====================="<<endl;
+	for (int i=0;i<=365;i++)
 	{
-		cout<<"SEG FAULT HERE"<<endl;	
+		cout<<searched->levels[i]->month<<",";
+		cout<<searched->levels[i]->day<<",";
 		cout<<searched->levels[i]->waterLevel<<endl;
-		int level=searched->levels[i]->waterLevel;
-		cout<<level<<endl;
 	}
 }
 void RiverSource::showSections()
@@ -389,7 +379,7 @@ double RiverSource::getRelativeLevel(Section *currentSection, int level)
 WaterLevel RiverSource::getBestDay(Section *currentSection)
 {
   WaterLevel *min=currentSection->levels[0];
-  for(int i=1; i<365;i=i+1)
+  for(int i=1; i<=365;i=i+1)
   {
     if(currentSection->levels[i]->relativeLevel<min->relativeLevel)
     {
@@ -469,8 +459,9 @@ int main()
     }
   }
   //workin^^^
-  Source.showSections();
+  
   Source.addLevels();
+  Source.showSections();
   Source.showLevels("Shoshone");
   cout<<"Welcome to RiverSource!"<<endl;
 	cout<<"================================"<<endl;
@@ -516,12 +507,16 @@ while (!done)
 		  break;
 		}
 	}
+	if(!done)
+	{
 		cout<<"Please select an option:"<<endl;
+	
 	cout<<"1. Quit"<<endl;
 	cout<<"2. Print a river"<<endl;
 	cout<<"3. Print all rivers"<<endl;
 	getline(cin,userChoice);
 	choice=stoi(userChoice);
+	}
 
 }
   return 0;
