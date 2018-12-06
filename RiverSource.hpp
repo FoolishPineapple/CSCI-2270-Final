@@ -34,7 +34,7 @@ struct Section
 	string secName;
 	string rapidClass;
 	double sectionLength;
-	WaterLevel *levels[365];
+	WaterLevel *levels[366];
 	Section *nextSection;
 	Section *secHashSec;
 	WaterLevel bestDay;
@@ -53,7 +53,7 @@ struct Section
 		this->nextSection=nullptr;
 		this->secHashSec=nullptr;
 		this->bestWaterLevel=0;
-		
+
 	}
 };
 struct River
