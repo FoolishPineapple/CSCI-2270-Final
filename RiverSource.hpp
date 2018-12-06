@@ -23,6 +23,7 @@ struct WaterLevel
 		this->day=0;
 		this->month=0;
 		this->waterLevel=0;
+		this->relativeLevel=0.0;
 		this->relativeLevel=2;
 		this->best=nullptr;
 	}
@@ -45,7 +46,7 @@ struct Section
 		this->riverName=river;
 		this->nextSection=nullptr;
 		this->secHashSec=nullptr;
-	
+
 	}
 	Section()
 	{
