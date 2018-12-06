@@ -292,6 +292,42 @@ void RiverSource::showRivers()//working
 		}
 	}
 }
+
+double RiverSource::getRelativeLevel(Section *currentSection, int level)
+{
+  int bestLevel=currentSection->bestWaterLevel;
+  double relativeLevel=level/bestLevel;
+  return relativeLevel;
+}
+
+WaterLevel RiverSource::getBestDay(Section *currentSection)
+{
+  WaterLevel *min=currentSection->levels[0];
+  for(int i=1; i<365;i=i+1)
+  {
+    if(currentSection->levels[i]->relativeLevel<min->relativeLevel)
+    {
+      min=currentSection->levels[i];
+    }
+    if(currentSection->levels[i]->relativeLevel==min->relativeLevel)
+    {
+      if(min->best==nullptr)
+      {
+        min->best=currentSection->levels[i];
+      }
+      else
+      {
+        WaterLevel *temp=min;
+        while(temp->best!=nullptr)
+        {
+          temp=temp->best;
+        }
+        temp->best=currentSection->levels[i];
+      }
+    }
+  }
+}
+
 int main()
 {
   RiverSource Source(15,20);
