@@ -50,7 +50,6 @@ int RiverSource::hashSection(string name)//working
 void RiverSource::mergeRivers(River* feeder, Section *mainStream)
 {
 	Section *temp=feeder->firstSection;
-
 	while (temp->nextSection!=nullptr)
 	{
 		temp=temp->nextSection;
@@ -106,9 +105,7 @@ void RiverSource::addRiver(River *river)//working
 		}
 		River *lastRiv=searchRiver(location->riverName);
 		lastRiv->nextRiver=river;
-
 	}
-
 }
 void RiverSource::addSection(River *name, Section* sectionToAdd)//working
 {
@@ -119,7 +116,7 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)//working
 		tempRiv=tempRiv->nextRiver;
 	}
 
-	Section *temp=new Section;
+	Section *temp;
 	temp=tempRiv->firstSection;
 	if (temp==nullptr)
 	{
@@ -273,10 +270,8 @@ void RiverSource::addLevels()
           			addLevel2->relativeLevel=curRel;
 					currentSection->levels[dayOfYear]=addLevel2;
 					dayOfYear++;
-
 				}
 				currentSection=currentSection->secHashSec;
-
 			}
 		}
 	}
@@ -291,32 +286,40 @@ void RiverSource::displayEntireRiver(string riverName,int data)//working
 
   while(currentSection!=nullptr)
   {
-    //currentSection=currentSection->nextSection;
-    if(data>=1)
+    if(currentSection->riverName==riverName)
     {
-      cout<<currentSection->secName<<endl;
+      if(data>=1)
+      {
+        cout<<currentSection->secName<<endl;
+      }
+      if(data>=2&&data!=5)
+      {
+        cout<<"Class: "<<currentSection->rapidClass<<endl;
+      }
+      if(data>=3)
+      {
+        cout<<"Length: "<<currentSection->sectionLength<<" miles"<<endl;
+      }
+      if(data>=4&&data!=5)
+      {
+        cout<<"Best water level: "<<currentSection->bestWaterLevel<<" cfs"<<endl;
+      }
+      if(currentSection->nextSection!=nullptr)
+      {
+      cout<<"    |    "<<endl;
+      cout<<"    V   "<<endl;
+  	  }
+  	  else
+  	  {
+  		    cout<<'\n'<<endl;
+  	  }
     }
-    if(data>=2&&data!=5)
+    else
     {
-      cout<<"Class: "<<currentSection->rapidClass<<endl;
+      cout<<"End Of River"<<endl;
+      cout<<"The "<<riverName<<" feeds into the "<<currentSection->riverName<<" at the "<<currentSection->secName<<" section."<<endl;
+      break;
     }
-    if(data>=3)
-    {
-      cout<<"Length: "<<currentSection->sectionLength<<" miles"<<endl;
-    }
-    if(data>=4&&data!=5)
-    {
-      cout<<"Best water level: "<<currentSection->bestWaterLevel<<" cfs"<<endl;
-    }
-    if(currentSection->nextSection!=nullptr)
-    {
-    cout<<"    |    "<<endl;
-    cout<<"    V   "<<endl;
-	  }
-	  else
-	  {
-		    cout<<'\n'<<endl;
-	  }
     currentSection=currentSection->nextSection;
   }
 }
@@ -477,6 +480,45 @@ void RiverSource::findMySection(double mileage, string rapClass)
 		cout<<"No section found within given parameters"<<endl;
 	}
 }
+
+void tripPlanner(Section *currentSection,double mileage)
+{
+  double milesTraveled=0.0;
+  double maxMileage=mileage * 1.5;
+  if(milesTraveled>=maxMileage)
+  {
+    cout<<"The "<<currentSection->secName<< " is "<<milesTraveled<< "miles long,  and is great for your trip."<<endl;
+  }
+  else
+  {
+    Section *temp=currentSection;
+    cout<<"Trip PLan for the "<<currentSection->riverName<<endl;
+    cout<<"==================="<<endl;
+    cout<<"Starting Section:"<<endl;
+    while(milesTraveled<mileage)
+    {
+      if(milesTraveled+temp->sectionLength>maxMileage)
+      {
+        cout<<"==================="<<endl;
+        cout<<"Your trip will be "<<milesTraveled<<" miles in total."<<endl;
+        milesTraveled=milesTraveled+temp->sectionLength;
+      }
+      else
+      {
+        milesTraveled=milesTraveled+temp->sectionLength;
+        cout<<temp->secName<<endl;
+        cout<<"Class: "<<temp->rapidClass<<endl;
+        cout<<"Best Water Level:"<<temp->bestWaterLevel<<endl;
+        cout<<"    |    "<<endl;
+        cout<<"    |    "<<endl;
+        cout<<"    V    "<<endl;
+        temp=temp->nextSection;
+      }
+    }
+  }
+}
+
+
 int main()
 {
   RiverSource Source(15,20);
@@ -544,6 +586,7 @@ int main()
 	cout<<"5. Show best day for a section"<<endl;
 	cout<<"6. Show the projected level of a section of a specific day"<<endl;
 	cout<<"7. Find me a section"<<endl;
+  cout<<"8. plan a trip"<<endl;
 	getline(cin, userChoice);
 	int choice=stoi(userChoice);
 	bool done=false;
@@ -652,6 +695,34 @@ while (!done)
   			Source.findMySection(length, userChoice);
   			break;
   		}
+      case 8:
+      {
+        string sectionChoice;
+  			string mileageChoice;
+        double miles;
+        cout<<"Let's plan a trip!"<<endl;
+        cout<<"What section would you like to start at:"<<endl;
+  			getline(cin,sectionChoice);
+        cout<<"How long would u like ur trip to be (in miles):"<<endl;
+        getline(cin,mileageChoice);
+        miles=stod(mileageChoice);
+        Section *currentSection=Source.searchSections(sectionChoice);
+        River *startRiver=Source.searchRiver(currentSection->riverName);
+        Section *sec=startRiver->firstSection;
+        if(sec->secName==currentSection->secName)
+        {
+          currentSection=sec;
+        }
+        else
+        {
+          while(sec->secName!=currentSection->secName)
+          {
+            sec=sec->nextSection;
+          }
+          currentSection=sec;
+        }
+        tripPlanner(currentSection,miles);
+      }
 	}
 	if(!done)
 	{
@@ -665,6 +736,7 @@ while (!done)
 	cout<<"5. Show best day for a section"<<endl;
 	cout<<"6. Show the projected level of a section of a specific day"<<endl;
 	cout<<"7. Find me a section"<<endl;
+  cout<<"8. Plan a trip"<<endl;
 	getline(cin,userChoice);
 	choice=stoi(userChoice);
 	}
