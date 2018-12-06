@@ -156,6 +156,12 @@ class RiverSource
 
 		int getDayOfYear(int day, int month);
 
+		Section* getBestSecction(int date);
+
+		void findMySection(double mileage, string rapClass);
+
+		int convertClass(string rapClass);
+
 	private:
 		int numberOfRivers;
 		int numberOfSections;
