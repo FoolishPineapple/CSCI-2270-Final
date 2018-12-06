@@ -461,8 +461,6 @@ int main()
   //workin^^^
   
   Source.addLevels();
-  Source.showSections();
-  Source.showLevels("Shoshone");
   cout<<"Welcome to RiverSource!"<<endl;
 	cout<<"================================"<<endl;
 	string userChoice;
@@ -470,6 +468,8 @@ int main()
 	cout<<"1. Quit"<<endl;
 	cout<<"2. Print a rivers"<<endl;
 	cout<<"3. Print all rivers"<<endl;
+	cout<<"4. Show all sections"<<endl;
+	cout<<"5. Show all water levels and dates for a section"<<endl;
 	getline(cin, userChoice);
 	int choice=stoi(userChoice);
 	bool done=false;
@@ -493,7 +493,7 @@ while (!done)
 			cout<<"1. Display only section names."<<endl;
 			cout<<"2. Display section names and class."<<endl;
 			cout<<"3. Display section names, class, and length."<<endl;
-			cout<<"Display section names, class, length, and best water level."<<endl;
+			cout<<"4. Display section names, class, length, and best water level."<<endl;
 			cout<<"Choice: ";
 			getline(cin, settingChoice);
 			int settingNumber=stoi(settingChoice);
@@ -506,6 +506,11 @@ while (!done)
 		  Source.showRivers();
 		  break;
 		}
+	}
+	case 4:
+	{
+		Source.showSections();
+		break;
 	}
 	if(!done)
 	{
