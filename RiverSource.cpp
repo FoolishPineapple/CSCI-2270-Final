@@ -480,6 +480,14 @@ void RiverSource::findMySection(double mileage, string rapClass)
 		cout<<"No section found within given parameters"<<endl;
 	}
 }
+void RiverSource::sectionCleaner(Section *deleteMe)
+{
+	if(deleteMe->nextBest!=nullptr)
+	{
+		sectionCleaner(deleteMe->nextBest);
+	}
+	deleteMe=nullptr;
+}
 BestSection* RiverSource::bestForDay()
 {
 	BestSection *sectionTable=new BestSection[365];
