@@ -264,7 +264,7 @@ void RiverSource::addLevels()
 					curDay=stoi(word);
 					if(dayOfYear==0&&curMonth!=1)
 					{
-					firstDay=dayOfYear=getDayOfYear(curDay,curMonth);
+					firstDay=dayOfYear=getDayOfYear(curDay,curMonth)-1;
 					}
 					getline(s1, word);
 					curLevel=stoi(word);
@@ -393,47 +393,34 @@ void RiverSource::showRivers()//working
 
 WaterLevel RiverSource::getBestDay(Section *currentSection)
 {
-  WaterLevel *min=currentSection->levels[0];
+  WaterLevel *min= new WaterLevel;
+  min=currentSection->levels[0];
   for(int i=1; i<=365;i=i+1)
   {
     if(currentSection->levels[i]->relativeLevel<min->relativeLevel)
     {
       min=currentSection->levels[i];
     }
-    // if(currentSection->levels[i]->relativeLevel==min->relativeLevel)
-    // {
-    //   cout<<
-    //   cout<<currentSection->levels[i]->relativeLevel;
-    //   min->relativeLevel;
-    //   cout<<"here2"<<endl;
-    //   if(min->best==nullptr)
-    //   {
-    //     cout<<"here2.1"<<endl;
-    //     min->best=currentSection->levels[i];
-    //   }
-    //   else
-    //   {
-    //     cout<<"here2.2"<<endl;
-    //     WaterLevel *temp=min;
-    //     while(temp->best!=nullptr)
-    //     {
-    //       cout<<temp->best->relativeLevel<<endl;
-    //       temp=temp->best;
-    //     }
-    //     cout<<"here2.2.2"<<endl;
-    //     temp->best=currentSection->levels[i];
-
+    else if(currentSection->levels[i]->relativeLevel==min->relativeLevel)
+    {
+      if(min->best==nullptr)
+      {
+        min->best=currentSection->levels[i];
+      }
+      else
+      {
+        WaterLevel *temp=min;
+        while(temp->best!=nullptr)
+        {
+          temp=temp->best;
+        }
+        temp->best=currentSection->levels[i];
+      }
+    }
   }
   return *min;
 }
 
-// Section* RiverSource::getBestSection(int date)
-// {
-// 	Section *temp;
-// 	Section *curBest;
-// 	for(int i=0;i<numberOfSections)
-
-// }
 int RiverSource::convertClass(string rapClass)
 {
 	int converted;
@@ -544,7 +531,6 @@ int main()
     }
   }
   //workin^^^
-
   Source.addLevels();
   cout<<string(50,'\n');
   cout<<"Welcome to RiverSource!"<<endl;
@@ -609,11 +595,26 @@ while (!done)
   			getline(cin, menuChoice);
   			sectionChoice=Source.searchSections(menuChoice);
   			bestDay=Source.getBestDay(sectionChoice);
-  			cout<<"\n";
-  			cout<<"Best flow is "<<sectionChoice->bestWaterLevel<<" cfs."<<endl;
-  			cout<<"The best projected day is: "<<bestDay.month<<"/"<<bestDay.day<<endl;
-  			cout<<"The water level is projected to be "<<bestDay.waterLevel<<" cfs"<<endl;
-  			cout<<"\n";
+        if(bestDay.best!=nullptr)
+        {
+          cout<<"\n";
+          cout<<"Best flow is "<<sectionChoice->bestWaterLevel<<" cfs."<<endl;
+          cout<<"Here are all the days with a water level projected to be "<< bestDay.waterLevel<<" cfs"<<":"<<endl;
+          while(bestDay.best!=nullptr)
+          {
+      			cout<<bestDay.month<<"/"<<bestDay.day<<endl;
+            bestDay=*bestDay.best;
+          }
+          cout<<bestDay.month<<"/"<<bestDay.day<<endl;
+        }
+        else
+        {
+          cout<<"\n";
+    			cout<<"Best flow is "<<sectionChoice->bestWaterLevel<<" cfs."<<endl;
+    			cout<<"The best projected day is: "<<bestDay.month<<"/"<<bestDay.day<<endl;
+    			cout<<"The water level is projected to be "<<bestDay.waterLevel<<" cfs"<<endl;
+    			cout<<"\n";
+        }
   			break;
   		}
   		case 6:
