@@ -17,12 +17,14 @@ struct WaterLevel
 	int month;
 	int waterLevel;
 	double relativeLevel;
+	WaterLevel *best;
 	WaterLevel()
 	{
 		this->day=0;
 		this->month=0;
 		this->waterLevel=0;
 		this->relativeLevel=2;
+		this->best=nullptr;
 	}
 };
 struct Section
@@ -32,7 +34,7 @@ struct Section
 	string secName;
 	string rapidClass;
 	double sectionLength;
-	WaterLevel *levels;
+	WaterLevel *levels[365];
 	Section* nextSection;
 	Section* secHashSec;
 	WaterLevel bestDay;
@@ -140,7 +142,7 @@ class RiverSource
 		void printAll();
 
 		void showLevels(string name);
-		
+
 		void showRivers();
 
 		void showSections();
