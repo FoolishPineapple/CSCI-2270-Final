@@ -480,7 +480,39 @@ void RiverSource::findMySection(double mileage, string rapClass)
 		cout<<"No section found within given parameters"<<endl;
 	}
 }
+BestSection* RiverSource::bestForDay()
+{
+	BestSection *sectionTable=new BestSection[365];
+	Section *temp;
+	for(int i=0;i<numberOfSections;i++)
+	{
+		temp=&sections[i];
+		while(temp!=nullptr)
+		{
+			if(sectionTable[i].relLevel>temp->levels[i]->relativeLevel)
+			{
+				if(sectionTable[i].bestSec->nextBest!=nullptr)
+				{
+					sectionCleaner(sectionTable[i].bestSec->nextBest);
+				}
+				sectionTable[i].bestSec=temp;
+				sectionTable[i].relLevel=temp->levels[i]->relativeLevel;
+			}
+			else if(sectionTable[i].relLevel==temp->levels[i]->relativeLevel)
+			{
+				Section *temp2=sectionTable[i].bestSec;
+				while(temp2->nextBest!=nullptr)
+				{
+					temp2=temp2->nextBest;
+				}
+				temp2-> nextBest=temp;
 
+			}
+			temp=temp->secHashSec;
+		}
+	}
+	return sectionTable;
+}
 void tripPlanner(Section *currentSection,double mileage)
 {
   double milesTraveled=0.0;
