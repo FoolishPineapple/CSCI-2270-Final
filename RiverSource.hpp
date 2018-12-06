@@ -35,8 +35,8 @@ struct Section
 	string rapidClass;
 	double sectionLength;
 	WaterLevel *levels[365];
-	Section* nextSection;
-	Section* secHashSec;
+	Section *nextSection;
+	Section *secHashSec;
 	WaterLevel bestDay;
 	Note* notes;
 	Section(string name,string river)
@@ -45,6 +45,25 @@ struct Section
 		this->riverName=river;
 		this->nextSection=nullptr;
 		this->secHashSec=nullptr;
+		ifstream defaultFile("default.txt");
+		string line;
+		int counter=0;
+		while(getline(defaultFile,line))
+		{
+			int day;
+			int month;
+			stringstream ss;
+			ss<<line;
+			string word;
+			getline(ss,word,',');
+			month=stoi(word);
+			getline(ss,word);
+			day=stoi(word);
+			this->levels[counter]->month=month;
+			this->levels[counter]->day=day;
+			this->levels[counter]->waterLevel=0;
+			counter++;
+		}
 	}
 	Section()
 	{
@@ -150,6 +169,8 @@ class RiverSource
 		double getRelativeLevel(Section *currentSection, int level);
 
 		WaterLevel getBestDay(Section *currentSection);
+
+		int getDayOfYear(int day, int month);
 
 	private:
 		int numberOfRivers;
