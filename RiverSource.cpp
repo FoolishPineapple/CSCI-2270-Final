@@ -475,7 +475,6 @@ int main()
   Source.addLevels();
   cout<<"here"<<endl;
   River *test=Source.searchRiver("Gunnison River");
-  cout<<"here"<<endl;
   WaterLevel best=Source.getBestDay(test->firstSection);
   cout<<"best flow:"<<test->firstSection->bestWaterLevel<<endl;
   cout<<best.month<<"/"<<best.day<<endl;
@@ -488,7 +487,7 @@ int main()
 	cout<<"2. Print a rivers"<<endl;
 	cout<<"3. Print all rivers"<<endl;
 	cout<<"4. Show all sections"<<endl;
-	cout<<"5. Show all water levels and dates for a section"<<endl;
+	cout<<"5. Show best day for a section"<<endl;
 	getline(cin, userChoice);
 	int choice=stoi(userChoice);
 	bool done=false;
@@ -525,19 +524,36 @@ while (!done)
 		  Source.showRivers();
 		  break;
 		}
-    case 4:
-  	{
-  		Source.showSections();
-  		break;
-  	}
+   	 	case 4:
+  		{
+  			Source.showSections();
+  			break;
+  		}
+  		case 5:
+  		{
+  			string menuChoice;
+  			Section *sectionChoice;
+  			WaterLevel bestDay;
+  			cout<<"Please enter the name of a section to see the best day: ";
+  			getline(cin, menuChoice);
+  			sectionChoice=Source.searchSections(menuChoice);
+  			bestDay=Source.getBestDay(sectionChoice);
+  			cout<<"\n";
+  			cout<<"Best flow is "<<sectionChoice->bestWaterLevel<<" cfs."<<endl;
+  			cout<<"The best projected day is: "<<bestDay.month<<"/"<<bestDay.day<<endl;
+  			cout<<"The water level is projected to be "<<bestDay.waterLevel<<" cfs"<<endl;
+  			cout<<"\n";
+  			break;
+  		}
 	}
 	if(!done)
 	{
-		cout<<"Please select an option:"<<endl;
-
+	cout<<"Please select an option:"<<endl;
 	cout<<"1. Quit"<<endl;
-	cout<<"2. Print a river"<<endl;
+	cout<<"2. Print a rivers"<<endl;
 	cout<<"3. Print all rivers"<<endl;
+	cout<<"4. Show all sections"<<endl;
+	cout<<"5. Show best day for a section"<<endl;
 	getline(cin,userChoice);
 	choice=stoi(userChoice);
 	}
