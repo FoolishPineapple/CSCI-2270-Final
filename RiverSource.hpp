@@ -45,25 +45,7 @@ struct Section
 		this->riverName=river;
 		this->nextSection=nullptr;
 		this->secHashSec=nullptr;
-		ifstream defaultFile("default.txt");
-		string line;
-		int counter=0;
-		while(getline(defaultFile,line))
-		{
-			int day;
-			int month;
-			stringstream ss;
-			ss<<line;
-			string word;
-			getline(ss,word,',');
-			month=stoi(word);
-			getline(ss,word);
-			day=stoi(word);
-			this->levels[counter]->month=month;
-			this->levels[counter]->day=day;
-			this->levels[counter]->waterLevel=0;
-			counter++;
-		}
+	
 	}
 	Section()
 	{
@@ -71,6 +53,7 @@ struct Section
 		this->nextSection=nullptr;
 		this->secHashSec=nullptr;
 		this->bestWaterLevel=0;
+		
 	}
 };
 struct River
