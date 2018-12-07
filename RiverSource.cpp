@@ -681,7 +681,7 @@ int main()
 	string userChoice;
 	cout<<"Please select an option:"<<endl;
 	cout<<"1. Quit"<<endl;
-	cout<<"2. Print a river"<<endl;
+	cout<<"2. Print a rivers"<<endl;
 	cout<<"3. Print all rivers"<<endl;
 	cout<<"4. Show all sections"<<endl;
 	cout<<"5. Show best day for a section"<<endl;
@@ -752,6 +752,7 @@ while (!done)
             bestDay=*bestDay.best;
           }
           cout<<bestDay.month<<"/"<<bestDay.day<<endl;
+          break;
         }
         else
         {
@@ -825,7 +826,6 @@ while (!done)
           currentSection=sec;
         }
         tripPlanner(currentSection,miles);
-	      break;
       }
       case 9:
       {
@@ -837,26 +837,26 @@ while (!done)
       	getline(cin,word);
       	int day=stoi(word);
       	int date=Source.getDayOfYear(day,month);
-      	if(bestSections[date].bestSec->nextBest==nullptr)
-      	{
+      	// if(bestSections[date].bestSec->nextBest==nullptr)
+      	// {
       		cout<<"The best section to run on "<<month<<"/"<<day<<" is: "<<bestSections[date].bestSec->secName<<endl;
       		cout<<"The class is: "<<bestSections[date].bestSec->rapidClass<<endl;
       		cout<<"The distance is: "<<bestSections[date].bestSec->sectionLength<<" miles"<<endl;
-      		cout<<"The water level is: "<<bestSections[date].bestSec->levels[date]<<" cfs"<<endl;
+      		// cout<<"The water level is: "<<bestSections[date].bestSec->levels[date]<<" cfs"<<endl;
       		cout<<'\n';
-      	}
-      	else
-      	{
-      		Section *temp=bestSections[date].bestSec;
-      		int wLevel=temp->levels[date]->waterLevel;
-      		cout<<"You have a few options on "<<month<<"/"<<day<<endl;
+      	//}
+      	// else
+      	// {
+      	// 	Section *temp=bestSections[date].bestSec;
+      	// 	int wLevel=temp->levels[date]->waterLevel;
+      	// 	cout<<"You have a few options on "<<month<<"/"<<day<<endl;
 
-      			cout<<temp->secName<<endl;
-      			cout<<"The class is: "<<temp->rapidClass<<endl;
-      			cout<<"The distance is: "<<temp->sectionLength<<" miles"<<endl;
-      			cout<<"The water level is: "<<wLevel<<" cfs"<<endl;
+      	// 		cout<<temp->secName<<endl;
+      	// 		cout<<"The class is: "<<temp->rapidClass<<endl;
+      	// 		cout<<"The distance is: "<<temp->sectionLength<<" miles"<<endl;
+      	// 		cout<<"The water level is: "<<wLevel<<" cfs"<<endl;
 
-      	}
+      	//}
       	break;
       }
       case 10:
@@ -871,7 +871,7 @@ while (!done)
 	cout<<"================================"<<endl;
 	cout<<"Please select an option:"<<endl;
 	cout<<"1. Quit"<<endl;
-	cout<<"2. Print a river"<<endl;
+	cout<<"2. Print a rivers"<<endl;
 	cout<<"3. Print all rivers"<<endl;
 	cout<<"4. Show all sections"<<endl;
 	cout<<"5. Show best day for a section"<<endl;
