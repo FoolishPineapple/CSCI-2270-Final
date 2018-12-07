@@ -285,6 +285,8 @@ void RiverSource::displayEntireRiver(string riverName,int data)//working
   	cout<<"This river does not exsist. Please check your spelling and try again."<<endl;
   	cout<<'\n';
   }
+  else
+  {
   cout<<displayRiver->riverName<<endl;
   cout<<"======================="<<endl;
   Section *currentSection=displayRiver->firstSection;
@@ -327,6 +329,7 @@ void RiverSource::displayEntireRiver(string riverName,int data)//working
     }
     currentSection=currentSection->nextSection;
   }
+}
 }
 
 void RiverSource::printAll()//only printing one river
