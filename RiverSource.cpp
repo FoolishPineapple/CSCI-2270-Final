@@ -566,7 +566,7 @@ void tripPlanner(Section *currentSection,double mileage)
 {
   double milesTraveled=0.0;
   double maxMileage=mileage * 1.5;
-  if(milesTraveled>=maxMileage)
+  if(milesTraveled>=maxMileage)//test case if user enters 0;
   {
     cout<<"The "<<currentSection->secName<< " is "<<milesTraveled<< "miles long,  and is great for your trip."<<endl;
   }
@@ -593,7 +593,16 @@ void tripPlanner(Section *currentSection,double mileage)
         cout<<"    |    "<<endl;
         cout<<"    |    "<<endl;
         cout<<"    V    "<<endl;
-        temp=temp->nextSection;
+        if(temp->nextSection==nullptr)
+        {
+          cout<<"==================="<<endl;
+          cout<<"Your trip will be "<<milesTraveled<<" miles in total."<<endl;
+          milesTraveled=milesTraveled+maxMileage;
+        }
+        else
+        {
+          temp=temp->nextSection;
+        }
       }
     }
   }
