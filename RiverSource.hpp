@@ -6,11 +6,6 @@
 #include <fstream>
 #include <sstream>
 using namespace std;
-struct Note
-{
-	string aNote;
-	Note* nextNote;
-};
 struct WaterLevel
 {
 	int day;
@@ -38,7 +33,6 @@ struct Section
 	Section *nextSection;
 	Section *secHashSec;
 	WaterLevel bestDay;
-	Note* notes;
 	Section(string name,string river)
 	{
 		this->secName=name;
