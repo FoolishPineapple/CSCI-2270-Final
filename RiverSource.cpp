@@ -573,7 +573,7 @@ void tripPlanner(Section *currentSection,double mileage)
   else
   {
     Section *temp=currentSection;
-    cout<<"Trip PLan for the "<<currentSection->riverName<<endl;
+    cout<<"Trip Plan for the "<<currentSection->riverName<<endl;
     cout<<"==================="<<endl;
     cout<<"Starting Section:"<<endl;
     while(milesTraveled<mileage)
@@ -687,7 +687,7 @@ int main()
 	cout<<"5. Show best day for a section"<<endl;
 	cout<<"6. Show the projected level of a section of a specific day"<<endl;
 	cout<<"7. Find me a section"<<endl;
-    cout<<"8. plan a trip"<<endl;
+    cout<<"8. Plan a trip"<<endl;
     cout<<"9. Show the best section/sections on a given day"<<endl;
     cout<<"10. Show the best section for every day"<<endl;
 	getline(cin, userChoice);
