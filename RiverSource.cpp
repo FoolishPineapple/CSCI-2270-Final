@@ -364,7 +364,7 @@ void RiverSource::showSections()
 		{
 			while(temp->secHashSec!=nullptr)
 			{
-				cout<<temp->secName<<endl;//"->";
+				cout<<temp->secName<<endl;//<<"->";
 				temp=temp->secHashSec;
 
 			}
@@ -482,42 +482,83 @@ void RiverSource::findMySection(double mileage, string rapClass)
 }
 void RiverSource::sectionCleaner(Section *deleteMe)
 {
-	if(deleteMe->nextBest!=nullptr)
+	//ERROR HERE
+	Section *temp=deleteMe;
+	if(temp->nextBest!=nullptr)
 	{
-		sectionCleaner(deleteMe->nextBest);
+
+		sectionCleaner(temp->nextBest);
 	}
-	deleteMe=nullptr;
+	delete deleteMe;
 }
 BestSection* RiverSource::bestForDay()
 {
 	BestSection *sectionTable=new BestSection[365];
+	//temp is the current section
 	Section *temp;
-	for(int i=0;i<numberOfSections;i++)
+	for(int j=0;j<numberOfSections;j++)
 	{
-		temp=&sections[i];
-		while(temp!=nullptr)
+		temp=&sections[j];
+		temp->nextBest=nullptr;
+		if(temp->secName!="NONAME")
 		{
-			if(sectionTable[i].relLevel>temp->levels[i]->relativeLevel)
+			while(temp!=nullptr)
 			{
-				if(sectionTable[i].bestSec->nextBest!=nullptr)
-				{
-					sectionCleaner(sectionTable[i].bestSec->nextBest);
-				}
-				sectionTable[i].bestSec=temp;
-				sectionTable[i].relLevel=temp->levels[i]->relativeLevel;
-			}
-			else if(sectionTable[i].relLevel==temp->levels[i]->relativeLevel)
-			{
-				Section *temp2=sectionTable[i].bestSec;
-				while(temp2->nextBest!=nullptr)
-				{
-					temp2=temp2->nextBest;
-				}
-				temp2-> nextBest=temp;
+				cout<<temp->secName<<endl;
+				for(int i=0;i<=365;i++)
+					{
+					if(sectionTable[i].relLevel>=temp->levels[i]->relativeLevel)
+					{
+						//cout<<"test 4"<<endl;
+						if(sectionTable[i].bestSec==nullptr)
+						{
+							sectionTable[i].bestSec=temp;
+							sectionTable[i].relLevel=temp->levels[i]->relativeLevel;
+						}
+						// else if(sectionTable[i].bestSec->nextBest!=nullptr)
+						// {
+						// 	//cout<<"test 5"<<endl;
+						// 	cout<<sectionTable[i].bestSec->nextBest<<endl;
+						// 	cout<<sectionTable[i].bestSec->nextBest->secName<<endl;
+						// 	cout<<sectionTable[i].bestSec->nextBest->nextBest<<endl;
+						// 	sectionCleaner(sectionTable[i].bestSec->nextBest);
+						// }
+						//cout<<"test 8"<<endl;
+						
+						sectionTable[i].bestSec=temp;
+						sectionTable[i].bestSec->nextBest=nullptr;
+						sectionTable[i].relLevel=temp->levels[i]->relativeLevel;
+					}
+					// else if(sectionTable[i].relLevel==temp->levels[i]->relativeLevel)
+					// {
+						
+					// 	Section *temp2=sectionTable[i].bestSec;
+					// 	//cout<<temp2->secName<<endl;
+					// 	if(sectionTable[i].bestSec->nextBest==nullptr)
+					// 	{
+					// 		//cout<<"test 6"<<endl;
+					// 		sectionTable[i].bestSec->nextBest=temp;
+					// 	}
+					// 	else
+					// 	{
+					// 	while(temp2->nextBest!=nullptr)
+					// 	{
+					// 		//ERROR HERE
+					// 		//cout<<"test 7"<<endl;
+					// 		//cout<<temp2->nextBest->secName<<endl;
+					// 		temp2=temp2->nextBest;
+					// 		break;
+							
+					// 	}
+					// 	temp2->nextBest=temp;
+					// 	}
 
+					// }
 			}
-			temp=temp->secHashSec;
+				temp=temp->secHashSec;			
+
 		}
+	}
 	}
 	return sectionTable;
 }
@@ -557,7 +598,14 @@ void tripPlanner(Section *currentSection,double mileage)
     }
   }
 }
-
+void RiverSource::showBestSection(BestSection *best)
+{
+	for (int i=0;i<365;i++)
+	{
+		cout<<best[i].bestSec->levels[i]->month<<"/"<<best[i].bestSec->levels[i]->day;
+		cout<<": "<<best[i].bestSec->secName<<endl;
+	}
+}
 
 int main()
 {
@@ -614,6 +662,10 @@ int main()
   }
   //workin^^^
   Source.addLevels();
+  
+  cout<<'\n'<<endl;
+  BestSection *bestSections=Source.bestForDay();
+
   cout<<string(50,'\n');
   cout<<"Welcome to RiverSource!"<<endl;
 	cout<<"================================"<<endl;
@@ -626,7 +678,9 @@ int main()
 	cout<<"5. Show best day for a section"<<endl;
 	cout<<"6. Show the projected level of a section of a specific day"<<endl;
 	cout<<"7. Find me a section"<<endl;
-  cout<<"8. plan a trip"<<endl;
+    cout<<"8. plan a trip"<<endl;
+    cout<<"9. Show the best section/sections on a given day"<<endl;
+    cout<<"10. Show the best section for every day"<<endl;
 	getline(cin, userChoice);
 	int choice=stoi(userChoice);
 	bool done=false;
@@ -763,6 +817,43 @@ while (!done)
         }
         tripPlanner(currentSection,miles);
       }
+      case 9:
+      {
+      	string word;
+      	cout<<"Please enter a month numerically: ";
+      	getline(cin,word);
+      	int month=stoi(word);
+      	cout<<"Please enter a day: ";
+      	getline(cin,word);
+      	int day=stoi(word);
+      	int date=Source.getDayOfYear(day,month);
+      	if(bestSections[date].bestSec->nextBest==nullptr)
+      	{
+      		cout<<"The best section to run on "<<month<<"/"<<day<<" is: "<<bestSections[date].bestSec->secName<<endl;
+      		cout<<"The class is: "<<bestSections[date].bestSec->rapidClass<<endl;
+      		cout<<"The distance is: "<<bestSections[date].bestSec->sectionLength<<" miles"<<endl;
+      		cout<<"The water level is: "<<bestSections[date].bestSec->levels[date]<<" cfs"<<endl;
+      		cout<<'\n';
+      	}
+      	else
+      	{
+      		Section *temp=bestSections[date].bestSec;
+      		int wLevel=temp->levels[date]->waterLevel;
+      		cout<<"You have a few options on "<<month<<"/"<<day<<endl;
+
+      			cout<<temp->secName<<endl;
+      			cout<<"The class is: "<<temp->rapidClass<<endl;
+      			cout<<"The distance is: "<<temp->sectionLength<<" miles"<<endl;
+      			cout<<"The water level is: "<<wLevel<<" cfs"<<endl;
+
+      	}
+      	break;
+      }
+      case 10:
+      {
+      	Source.showBestSection(bestSections);
+      	break;
+      }
 	}
 	if(!done)
 	{
@@ -776,7 +867,9 @@ while (!done)
 	cout<<"5. Show best day for a section"<<endl;
 	cout<<"6. Show the projected level of a section of a specific day"<<endl;
 	cout<<"7. Find me a section"<<endl;
-  cout<<"8. Plan a trip"<<endl;
+    cout<<"8. Plan a trip"<<endl;
+    cout<<"9. Show the best section/sections on a given day"<<endl;
+    cout<<"10. Show the best section for every day"<<endl;
 	getline(cin,userChoice);
 	choice=stoi(userChoice);
 	}
