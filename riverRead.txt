@@ -18,22 +18,28 @@ Gunnison River,Black Canyon,V,13.5,2000
 Gunnison River,Gunnison Gorge,III,13.5,2000
 Gunnison River,Lower Gunnison,I,44,6800
 Gunnison River,Junk Show,I,30.5,8000
-Fraser River,Tabernash,IV,9.4,1600
-Fraser River,Byers Canyon,IV,3,1200
-Blue River,Breck Whitewater Park,II,2.7,400
-Blue River,Upper Blue,IV,3,1200
-Blue River,Lower Blue,III,3.8,1400
-Snake River,KLSPS,IV,2.8,300
-Ten Mile River,Copper,V,4.2,700
-Gore River,Upper Gore,III+,2.7,800
-Gore River,Lower Gore,IV,9.2,800
-Roaring Fork River,Upper Roaring Fork,V+,3.2,600
-Roaring Fork River,Slaughterhouse,V,4.5,750
-Roaring Fork River,Woody Creek,III,3.8,600
-Roaring Fork River,Toothache,III,6.2,700
-Roaring Fork River,Cemetary,II+,6.2,1400
 Eagle River,Top Eagle,IV,8.8,600
 Eagle River,Gilman Gorge,V,4,800
 Eagle River,Dowd Chute,IV,1,1300
 Eagle River,Upper Eagle,III,7,2000
 Eagle River,Lower Eagle,III,17.4,1000
+Eagle River,Ruby Horsethief,II,25,1800
+Fraser River,Tabernash,IV,9.4,1600
+Fraser River,Byers Canyon,IV,3,1200
+Blue River,Breck Whitewater Park,II,2.7,400
+Blue River,Upper Blue,IV,3,1200
+Blue River,Lower Blue,III,3.8,1400
+Blue River,Gore Canyon,V,9.5,1100
+Snake River,KLSPS,IV,2.8,300
+Snake River,Lower Blue,III,3.8,1400
+Ten Mile Creek,Copper,V,4.2,700
+Ten Mile Creek,Lower Blue,III,3.8,1400
+Gore Creek,Upper Gore,III+,2.7,800
+Gore Creek,Lower Gore,IV,9.2,800
+Gore Creek,Upper Eagle,III,7,2000
+Roaring Fork River,Upper Roaring Fork,V+,3.2,600
+Roaring Fork River,Slaughterhouse,V,4.5,750
+Roaring Fork River,Woody Creek,III,3.8,600
+Roaring Fork River,Toothache,III,6.2,700
+Roaring Fork River,Cemetary,II+,6.2,1400
+Roaring Fork River,Two Rivers,II,4,3000
