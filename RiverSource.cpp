@@ -825,6 +825,7 @@ while (!done)
           currentSection=sec;
         }
         tripPlanner(currentSection,miles);
+	      break;
       }
       case 9:
       {
