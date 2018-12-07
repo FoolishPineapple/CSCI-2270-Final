@@ -280,6 +280,11 @@ void RiverSource::addLevels()
 void RiverSource::displayEntireRiver(string riverName,int data)//working
 {
   River *displayRiver=searchRiver(riverName);
+  if(displayRiver==nullptr)
+  {
+  	cout<<"This river does not exsist. Please check your spelling and try again."<<endl;
+  	cout<<'\n';
+  }
   cout<<displayRiver->riverName<<endl;
   cout<<"======================="<<endl;
   Section *currentSection=displayRiver->firstSection;
