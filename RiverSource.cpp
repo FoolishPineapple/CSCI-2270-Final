@@ -681,7 +681,7 @@ int main()
 	string userChoice;
 	cout<<"Please select an option:"<<endl;
 	cout<<"1. Quit"<<endl;
-	cout<<"2. Print a rivers"<<endl;
+	cout<<"2. Print a river"<<endl;
 	cout<<"3. Print all rivers"<<endl;
 	cout<<"4. Show all sections"<<endl;
 	cout<<"5. Show best day for a section"<<endl;
@@ -871,7 +871,7 @@ while (!done)
 	cout<<"================================"<<endl;
 	cout<<"Please select an option:"<<endl;
 	cout<<"1. Quit"<<endl;
-	cout<<"2. Print a rivers"<<endl;
+	cout<<"2. Print a river"<<endl;
 	cout<<"3. Print all rivers"<<endl;
 	cout<<"4. Show all sections"<<endl;
 	cout<<"5. Show best day for a section"<<endl;
