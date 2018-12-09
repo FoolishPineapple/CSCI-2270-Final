@@ -501,7 +501,7 @@ void RiverSource::sectionCleaner(Section *deleteMe)
 }
 BestSection* RiverSource::bestForDay()
 {
-	BestSection *sectionTable=new BestSection[365];
+	BestSection *sectionTable=new BestSection[366];
 	//temp is the current section
 	Section *temp;
 	for(int j=0;j<numberOfSections;j++)
@@ -512,56 +512,39 @@ BestSection* RiverSource::bestForDay()
 		{
 			while(temp!=nullptr)
 			{
-				cout<<temp->secName<<endl;
+				//cout<<temp->secName<<endl;
 				for(int i=0;i<=365;i++)
 					{
-					if(sectionTable[i].relLevel>=temp->levels[i]->relativeLevel)
+					if(sectionTable[i].relLevel>temp->levels[i]->relativeLevel)
 					{
-						//cout<<"test 4"<<endl;
 						if(sectionTable[i].bestSec==nullptr)
 						{
 							sectionTable[i].bestSec=temp;
 							sectionTable[i].relLevel=temp->levels[i]->relativeLevel;
 						}
-						// else if(sectionTable[i].bestSec->nextBest!=nullptr)
-						// {
-						// 	//cout<<"test 5"<<endl;
-						// 	cout<<sectionTable[i].bestSec->nextBest<<endl;
-						// 	cout<<sectionTable[i].bestSec->nextBest->secName<<endl;
-						// 	cout<<sectionTable[i].bestSec->nextBest->nextBest<<endl;
-						// 	sectionCleaner(sectionTable[i].bestSec->nextBest);
-						// }
-						//cout<<"test 8"<<endl;
-						
 						sectionTable[i].bestSec=temp;
 						sectionTable[i].bestSec->nextBest=nullptr;
 						sectionTable[i].relLevel=temp->levels[i]->relativeLevel;
 					}
-					// else if(sectionTable[i].relLevel==temp->levels[i]->relativeLevel)
-					// {
+					 else if(sectionTable[i].relLevel==temp->levels[i]->relativeLevel)
+					{
 						
-					// 	Section *temp2=sectionTable[i].bestSec;
-					// 	//cout<<temp2->secName<<endl;
-					// 	if(sectionTable[i].bestSec->nextBest==nullptr)
-					// 	{
-					// 		//cout<<"test 6"<<endl;
-					// 		sectionTable[i].bestSec->nextBest=temp;
-					// 	}
-					// 	else
-					// 	{
-					// 	while(temp2->nextBest!=nullptr)
-					// 	{
-					// 		//ERROR HERE
-					// 		//cout<<"test 7"<<endl;
-					// 		//cout<<temp2->nextBest->secName<<endl;
-					// 		temp2=temp2->nextBest;
-					// 		break;
+						Section *temp2=sectionTable[i].bestSec;
+						if(sectionTable[i].bestSec->nextBest==nullptr)
+						{
+							sectionTable[i].bestSec->nextBest=temp;
+						}
+						else
+						{
+						while(temp2!=nullptr)
+						{
+							temp2=temp2->nextBest;
 							
-					// 	}
-					// 	temp2->nextBest=temp;
-					// 	}
+						}
+						temp2=temp;
+						}
 
-					// }
+					}
 			}
 				temp=temp->secHashSec;			
 
@@ -617,10 +600,19 @@ void tripPlanner(Section *currentSection,double mileage)
 }
 void RiverSource::showBestSection(BestSection *best)
 {
-	for (int i=0;i<365;i++)
+	for (int i=0;i<=365;i++)
 	{
+		Section *temp=best[i].bestSec;
 		cout<<best[i].bestSec->levels[i]->month<<"/"<<best[i].bestSec->levels[i]->day;
-		cout<<": "<<best[i].bestSec->secName<<endl;
+		cout<<": "<<best[i].bestSec->secName;
+		temp=temp->nextBest;
+		while(temp!=nullptr)
+		{
+			cout<<", "<<temp->secName;
+			temp=temp->nextBest;
+		}
+		cout<<'\n';
+
 	}
 }
 
@@ -679,7 +671,7 @@ int main()
   }
   //workin^^^
   Source.addLevels();
-  
+  //Source.showSections();
   cout<<'\n'<<endl;
   BestSection *bestSections=Source.bestForDay();
 
@@ -842,29 +834,34 @@ while (!done)
       	getline(cin,word);
       	int month=stoi(word);
       	cout<<"Please enter a day: ";
+      	cout<<'\n';
       	getline(cin,word);
       	int day=stoi(word);
       	int date=Source.getDayOfYear(day,month);
-      	// if(bestSections[date].bestSec->nextBest==nullptr)
-      	// {
+      	 if(bestSections[date].bestSec->nextBest==nullptr)
+      	 {
       		cout<<"The best section to run on "<<month<<"/"<<day<<" is: "<<bestSections[date].bestSec->secName<<endl;
       		cout<<"The class is: "<<bestSections[date].bestSec->rapidClass<<endl;
       		cout<<"The distance is: "<<bestSections[date].bestSec->sectionLength<<" miles"<<endl;
-      		// cout<<"The water level is: "<<bestSections[date].bestSec->levels[date]<<" cfs"<<endl;
+      		cout<<"The water level is: "<<bestSections[date].bestSec->levels[date]->waterLevel<<" cfs"<<endl;
       		cout<<'\n';
-      	//}
-      	// else
-      	// {
-      	// 	Section *temp=bestSections[date].bestSec;
-      	// 	int wLevel=temp->levels[date]->waterLevel;
-      	// 	cout<<"You have a few options on "<<month<<"/"<<day<<endl;
+      	}
+      	else
+      	{
+      		Section *temp=bestSections[date].bestSec;
+      		cout<<"You have a few options on "<<month<<"/"<<day<<endl;
+      		cout<<'\n';
+      		while(temp!=nullptr)
+      		{
+      			cout<<temp->secName<<endl;
+      			cout<<"The class is: "<<temp->rapidClass<<endl;
+      			cout<<"The distance is: "<<temp->sectionLength<<" miles"<<endl;
+      			cout<<"The water level is: "<<temp->levels[date]->waterLevel<<" cfs"<<endl;
+      			cout<<'\n';
+      			temp=temp->nextBest;
+      		}
 
-      	// 		cout<<temp->secName<<endl;
-      	// 		cout<<"The class is: "<<temp->rapidClass<<endl;
-      	// 		cout<<"The distance is: "<<temp->sectionLength<<" miles"<<endl;
-      	// 		cout<<"The water level is: "<<wLevel<<" cfs"<<endl;
-
-      	//}
+      	}
       	break;
       }
       case 10:
