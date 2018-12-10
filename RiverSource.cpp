@@ -1,12 +1,26 @@
+/*
+Brant Smith and Matt Janc
+River Source 
+December 10,2018
+***CSCI 2270 Final Project***
+Professor Shayon Gupta
+*/
+
 #include "RiverSource.hpp"
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <sstream>
-#include <cmath>
+#include <cmath>// used for absolute value
 using namespace std;
 
-RiverSource::RiverSource(int riverSize,int sectionSize)//working
+/*
+	Purpose: Constructor
+	Made by: Matt
+	Description: Initialize the global variables number of rivers and number of sections.
+	Allocate memory for the hash table of rivers and the hash table of sections.
+*/
+RiverSource::RiverSource(int riverSize,int sectionSize)
 {
   numberOfRivers=riverSize;
   numberOfSections=sectionSize;
@@ -19,13 +33,22 @@ RiverSource::~RiverSource()
 {
 
 }
-
-int RiverSource::getRiverSize()//working
+/*
+	Purpose: Getter function for the private variable number of rivers.
+	Made by: Matt
+	Description: Basic getter function.
+*/
+int RiverSource::getRiverSize()
 {
   return  numberOfRivers;
 }
-
-int RiverSource::hashRiver(string name)//working
+/*
+	Purpose: Return the index of a river name.
+	Made by: Brant
+	Description: Adds up the ASCI values of the characters in the river name. 
+	Then takes the modulo of that number and the number of rivers.
+*/
+int RiverSource::hashRiver(string name)
 {
 	int key=0;
 	for (int i=0;i<name.size();i++)
@@ -36,6 +59,12 @@ int RiverSource::hashRiver(string name)//working
 
 	return key;
 }
+/*
+	Purpose: Return the index of a section name.
+	Made by: Brant
+	Description: Adds up the ASCI values of the characters in the section name.
+	Returns the modulo of that sum and the defined number of sections
+*/
 int RiverSource::hashSection(string name)//working
 {
 	int key=0;
@@ -46,7 +75,12 @@ int RiverSource::hashSection(string name)//working
 	key=key%numberOfSections;
 	return key;
 }
-
+/*
+	Purpose: Merge the end of one river with a particular section on another.
+	Made by: Brant
+	Description: Given the end of one river and the section where the two rivers meet,
+	set the next river pointer on the end of the river equal to the section on the other.
+*/
 void RiverSource::mergeRivers(River* feeder, Section *mainStream)
 {
 	Section *temp=feeder->firstSection;
@@ -56,7 +90,12 @@ void RiverSource::mergeRivers(River* feeder, Section *mainStream)
 	}
 	temp->nextSection=mainStream;
 }
-River* RiverSource::searchRiver(string name)//working
+/*
+	Purpose: Locate the memory address of a river
+	Made by: Brant
+	Description: Go to the location of the river based on its hash key. Then traverse the linked list of rivers.
+*/
+River* RiverSource::searchRiver(string name)
 {
 	int key= hashRiver(name);
 	River *current=&rivers[key];
@@ -70,7 +109,11 @@ River* RiverSource::searchRiver(string name)//working
 	}
 	return nullptr;
 }
-
+/*
+	Purpose: Locate the memory address of a section
+	Made by: Brant
+	Description: Go to the location of the section based on the hash value of the name.Then traverse the linked list of sections
+*/
 Section* RiverSource::searchSections(string name)
 {
 	int key=hashSection(name);
@@ -88,15 +131,22 @@ Section* RiverSource::searchSections(string name)
   }
 	return nullptr;
 }
-void RiverSource::addRiver(River *river)//working
+/*
+	Purpose: Add a new river to the hash table
+	Made by: Brant
+	Description: Allocate memory and place the new river in the hash table of rivers.
+*/
+void RiverSource::addRiver(River *river)
 {
 	int key=hashRiver(river->riverName);
 	River *location=new River;
 	location=&rivers[key];
+	//If there is no river in that hash location.
 	if(location->riverName=="NONAME")
 		{
 			rivers[key]=*river;
 		}
+	//If there is already an item in that location, resolve the collision using chaining
 	else
 	{
 		while(location->nextRiver!=nullptr)
@@ -107,10 +157,18 @@ void RiverSource::addRiver(River *river)//working
 		lastRiv->nextRiver=river;
 	}
 }
+/*
+	Purpose: Add sections to the section hash and as a linked list to a river
+	Made by: Brant
+	Description: Hash the river that the given section is on. Add the section to the
+	chain of sections in the river. Then allocate memory for the section so that it 
+	can also reside int the section hash.
+*/
 void RiverSource::addSection(River *name, Section* sectionToAdd)//working
 {
 	int key=hashRiver(name->riverName);
 	River *tempRiv=&rivers[key];
+	//Traverse until the river is found.
 	while(tempRiv->riverName!=name->riverName)
 	{
 		tempRiv=tempRiv->nextRiver;
@@ -118,10 +176,12 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)//working
 
 	Section *temp;
 	temp=tempRiv->firstSection;
+	//If there is no section on the river
 	if (temp==nullptr)
 	{
 		tempRiv->firstSection=sectionToAdd;
 	}
+	//Traverse to the end of the chain of sections on a river and add the new section
 	else
 	{
 		while (temp->nextSection!=nullptr)
@@ -133,10 +193,12 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)//working
 	int key2=hashSection(sectionToAdd->secName);
 	Section *temp2=new Section;
 	temp2=&sections[key2];
+	//If the location in the section hash table is empty
 	if(temp2->secName=="NONAME")
 	{
 		sections[key2]=*sectionToAdd;
 	}
+	//If there is already an element in the section hash table, resolve collisions using chaining.
 	else
 	{
 		while(temp2->secHashSec!=nullptr)
@@ -146,6 +208,12 @@ void RiverSource::addSection(River *name, Section* sectionToAdd)//working
 		temp2->secHashSec=sectionToAdd;
 	}
 }
+/*
+	Purpose: Get the day of the year as a number between 0 and 365
+	Made by: Brant
+	Description: Take the month and determine how many days of the year come before it.
+	Add the current day to that number. NOTE: Febuary has 30 days.
+*/
 int RiverSource::getDayOfYear(int day, int month)
 {
 	int dayOfYear= -1;
@@ -199,6 +267,13 @@ int RiverSource::getDayOfYear(int day, int month)
 	}
 	return dayOfYear;
 }
+/*
+	Purpose: Get a number that makes comparing sections levels easy.
+	Made by: Matt
+	Description: Take in the level and the current section. Get the absolute value of
+	the current level- the best level for that section. Divide by the best number.
+	The closer this number is to 0, the better the water on that day. 
+*/
 double RiverSource::getRelativeLevel(Section *currentSection, int level)
 {
   double bestLevel=currentSection->bestWaterLevel;
@@ -206,6 +281,12 @@ double RiverSource::getRelativeLevel(Section *currentSection, int level)
   double relativeLevel=abs(level-bestLevel)/bestLevel;
   return relativeLevel;
 }
+/*
+	Purpose: Add the water levels for every day from a file
+	Made by: Brant
+	Description: Go through the sections hash to get every section name. Add .txt.
+	Read the water levels and store them in the levels array for each section.
+*/
 void RiverSource::addLevels()
 {
 
@@ -218,6 +299,7 @@ void RiverSource::addLevels()
 			while(currentSection!=nullptr)
 			{
 				string waterLevelFile=currentSection->secName + ".txt";
+				//default.txt populates the array with the proper dates.
 				ifstream defaultFile("default.txt");
 				string line2;
 				int counter=0;
@@ -259,6 +341,8 @@ void RiverSource::addLevels()
 					getline(s1, word, ',');
 					addLevel2->day=stoi(word);
 					curDay=stoi(word);
+					// In the event that the water level data doesnt start on January 1st. 
+					// Find the proper starting day.
 					if(dayOfYear==0&&curMonth!=1)
 					{
 					firstDay=dayOfYear=getDayOfYear(curDay,curMonth)-1;
@@ -276,7 +360,12 @@ void RiverSource::addLevels()
 		}
 	}
 }
-
+/*
+	Purpose: Print out all the sections on a river
+	Made by: Matt
+	Description: Traverses the linked list of sections on a given river and display
+	the desired information taken in by the user.
+*/
 void RiverSource::displayEntireRiver(string riverName,int data)//working
 {
   River *displayRiver=searchRiver(riverName);
@@ -291,48 +380,52 @@ void RiverSource::displayEntireRiver(string riverName,int data)//working
   cout<<"======================="<<endl;
   Section *currentSection=displayRiver->firstSection;
 
-  while(currentSection!=nullptr)
-  {
-    if(currentSection->riverName==riverName)
-    {
-      if(data>=1)
-      {
-        cout<<currentSection->secName<<endl;
-      }
-      if(data>=2&&data!=5)
-      {
-        cout<<"Class: "<<currentSection->rapidClass<<endl;
-      }
-      if(data>=3)
-      {
-        cout<<"Length: "<<currentSection->sectionLength<<" miles"<<endl;
-      }
-      if(data>=4&&data!=5)
-      {
-        cout<<"Best water level: "<<currentSection->bestWaterLevel<<" cfs"<<endl;
-      }
-      if(currentSection->nextSection!=nullptr)
-      {
-      cout<<"    |    "<<endl;
-      cout<<"    V   "<<endl;
-  	  }
-  	  else
-  	  {
-  		    cout<<'\n'<<endl;
-  	  }
+	  while(currentSection!=nullptr)
+	  {
+	    if(currentSection->riverName==riverName)
+	    {
+	      if(data>=1)
+	      {
+	        cout<<currentSection->secName<<endl;
+	      }
+	      if(data>=2&&data!=5)
+	      {
+	        cout<<"Class: "<<currentSection->rapidClass<<endl;
+	      }
+	      if(data>=3)
+	      {
+	        cout<<"Length: "<<currentSection->sectionLength<<" miles"<<endl;
+	      }
+	      if(data>=4&&data!=5)
+	      {
+	        cout<<"Best water level: "<<currentSection->bestWaterLevel<<" cfs"<<endl;
+	      }
+	      if(currentSection->nextSection!=nullptr)
+	      {
+	      cout<<"    |    "<<endl;
+	      cout<<"    V   "<<endl;
+	  	  }
+	  	  else
+	  	  {
+	  		    cout<<'\n'<<endl;
+	  	  }
+	    }
+	    else
+	    {
+	      cout<<"End Of River"<<endl;
+	      cout<<"The "<<riverName<<" feeds into the "<<currentSection->riverName<<" at the "<<currentSection->secName<<" section."<<endl;
+	      break;
+	    }
+	    currentSection=currentSection->nextSection;
+	  }
     }
-    else
-    {
-      cout<<"End Of River"<<endl;
-      cout<<"The "<<riverName<<" feeds into the "<<currentSection->riverName<<" at the "<<currentSection->secName<<" section."<<endl;
-      break;
-    }
-    currentSection=currentSection->nextSection;
-  }
 }
-}
-
-void RiverSource::printAll()//only printing one river
+/*
+	Purpose: Print out all of the rivers
+	Made by: Matt
+	Description: Goes through the entire hash table and prints out every river and its sections.
+*/
+void RiverSource::printAll()
 {
   for(int i=0;i<numberOfRivers;i++)
   {
@@ -348,6 +441,11 @@ void RiverSource::printAll()//only printing one river
 	}
   }
 }
+/*
+	Purpose: Show all of the water levels for a year on a section
+	Made by: Brant
+	Description: Go through the levels array, printing data for each point
+*/
 void RiverSource::showLevels(string name)
 {
 	Section *searched=searchSections(name);
@@ -360,6 +458,11 @@ void RiverSource::showLevels(string name)
 		cout<<searched->levels[i]->waterLevel<<endl;
 	}
 }
+/*
+	Purpose: Show all of the seciton names
+	Made by: Brant
+	Description: Traverse the sections hash table, visiting every element and printing the name.
+*/
 void RiverSource::showSections()
 {
 	cout<<'\n';
@@ -380,6 +483,11 @@ void RiverSource::showSections()
 		}
 	}
 }
+/*
+	Purpose: Show all of the rivers
+	Made by: Brant
+	Description: Traverses the river hash table, printing every name
+*/
 void RiverSource::showRivers()//working
 {
 	cout<<'\n';
@@ -399,14 +507,17 @@ void RiverSource::showRivers()//working
 		}
 	}
 }
-
-
-
+/*
+	Purpose: Find the best day to run a section
+	Made by: Matt
+	Description: Compare the relative levels of every day on a section. 
+	Return the best ones.
+*/
 WaterLevel RiverSource::getBestDay(Section *currentSection)
 {
   WaterLevel *min= new WaterLevel;
   min=currentSection->levels[0];
-  for(int i=1; i<=365;i=i+1)
+  for(int i=1; i<=365;i++)
   {
     if(currentSection->levels[i]->relativeLevel<min->relativeLevel)
     {
@@ -431,7 +542,11 @@ WaterLevel RiverSource::getBestDay(Section *currentSection)
   }
   return *min;
 }
-
+/*
+	Purpose: Convert the class string to a compareable number
+	Made by: Brant
+	Description: Assigns a numerical value to each different class option.
+*/
 int RiverSource::convertClass(string rapClass)
 {
 	int converted;
@@ -439,27 +554,35 @@ int RiverSource::convertClass(string rapClass)
 	{
 		converted=1;
 	}
-	else if(rapClass=="II")
+	else if(rapClass=="II"||rapClass=="II+")
 	{
 		converted=2;
 	}
-	else if(rapClass=="III")
+	else if(rapClass=="III"||rapClass=="III+")
 	{
 		converted=3;
 	}
-	else if(rapClass=="IV")
+	else if(rapClass=="IV"||rapClass=="IV+")
 	{
 		converted=4;
 	}
 	else if(rapClass=="V")
 	{
-		converted=25;
+		converted=5;
 	}
 	return converted;
 }
+/*
+	Purpose: Find a section for the user to run
+	Made by: Brant
+	Description: Given mileage and class, find the best section/s for the user.
+	Traverses the section hash table and check the class and distance of each section.
+
+*/
 void RiverSource::findMySection(double mileage, string rapClass)
 {
 	Section *temp;
+	//Uses a range of distance to allow more wiggle room. +/- 20%
 	double low=mileage-(mileage*.2);
 	double high=mileage+(mileage*.2);
 	bool foundSec=false;
@@ -468,6 +591,7 @@ void RiverSource::findMySection(double mileage, string rapClass)
 		temp=&sections[i];
 		while(temp!=nullptr)
 		{
+			//Allows for a rapid class that matches what the user want or is slightly easier.
 			if(convertClass(temp->rapidClass)==convertClass(rapClass)||convertClass(temp->rapidClass)==convertClass(rapClass)-1)
 			{
 				if(temp->sectionLength>=low&&temp->sectionLength<=high)
@@ -488,17 +612,11 @@ void RiverSource::findMySection(double mileage, string rapClass)
 		cout<<"No section found within given parameters"<<endl;
 	}
 }
-void RiverSource::sectionCleaner(Section *deleteMe)
-{
-	//ERROR HERE
-	Section *temp=deleteMe;
-	if(temp->nextBest!=nullptr)
-	{
-
-		sectionCleaner(temp->nextBest);
-	}
-	delete deleteMe;
-}
+/*
+	Purpose: Find the best section on every day
+	Made by: Brant
+	Description: Compares every relative level on every day and saves the lowest value/s
+*/
 BestSection* RiverSource::bestForDay()
 {
 	BestSection *sectionTable=new BestSection[366];
@@ -512,7 +630,6 @@ BestSection* RiverSource::bestForDay()
 		{
 			while(temp!=nullptr)
 			{
-				//cout<<temp->secName<<endl;
 				for(int i=0;i<=365;i++)
 					{
 					if(sectionTable[i].relLevel>temp->levels[i]->relativeLevel)
@@ -528,7 +645,7 @@ BestSection* RiverSource::bestForDay()
 					}
 					 else if(sectionTable[i].relLevel==temp->levels[i]->relativeLevel)
 					{
-
+						
 						Section *temp2=sectionTable[i].bestSec;
 						if(sectionTable[i].bestSec->nextBest==nullptr)
 						{
@@ -539,20 +656,27 @@ BestSection* RiverSource::bestForDay()
 						while(temp2!=nullptr)
 						{
 							temp2=temp2->nextBest;
-
+							
 						}
 						temp2=temp;
 						}
 
 					}
 			}
-				temp=temp->secHashSec;
+				temp=temp->secHashSec;			
 
 		}
 	}
 	}
 	return sectionTable;
 }
+/*
+	Purpose: Link together sections to plan a trip
+	Made by: Matt
+	Description: Starts at the given section and adds the milages up.
+	As long as the input mileage (plus some wiggle room) is less than the input
+	mileage, the next section will be printed.
+*/
 void tripPlanner(Section *currentSection,double mileage)
 {
   double milesTraveled=0.0;
@@ -598,6 +722,11 @@ void tripPlanner(Section *currentSection,double mileage)
     }
   }
 }
+/*
+	Purpose: Show the best section on every day
+	Made by: Brant
+	Description: Traveses the best sections array and prints the name/ names
+*/
 void RiverSource::showBestSection(BestSection *best)
 {
 	for (int i=0;i<=365;i++)
@@ -615,7 +744,12 @@ void RiverSource::showBestSection(BestSection *best)
 
 	}
 }
-
+/*
+	Purpose: Main function and GUI
+	Made by: Matt and Brant
+	Description: Runs the program and loads all data
+	NOTES: River and section names that are searched must be exactly as they are saved
+*/
 int main()
 {
   RiverSource Source(15,20);
@@ -660,7 +794,6 @@ int main()
         bestFlow=stoi(word);
         temp->bestWaterLevel=bestFlow;
         temp->nextSection=nullptr;
-        temp->notes=nullptr;
         Source.addSection(riverExist,temp);
       }
       else
@@ -669,9 +802,7 @@ int main()
       }
     }
   }
-  //workin^^^
   Source.addLevels();
-  //Source.showSections();
   cout<<'\n'<<endl;
   BestSection *bestSections=Source.bestForDay();
 
@@ -741,7 +872,6 @@ while (!done)
   			getline(cin, menuChoice);
   			sectionChoice=Source.searchSections(menuChoice);
   			bestDay=Source.getBestDay(sectionChoice);
-        cout<<bestDay.waterLevel<<endl;
         if(bestDay.best!=nullptr)
         {
           cout<<"\n";
@@ -806,35 +936,27 @@ while (!done)
   			string mileageChoice;
         double miles;
         cout<<"Let's plan a trip!"<<endl;
-        cout<<"What section would you like to start at:"<<endl;
-  			getline(cin,sectionChoice);
-        cout<<"How long would u like ur trip to be (in miles):"<<endl;
+        cout<<"What section would you like to start at: ";
+  		getline(cin,sectionChoice);
+        cout<<"How long would you like your trip to be (in miles): ";
         getline(cin,mileageChoice);
         miles=stod(mileageChoice);
         Section *currentSection=Source.searchSections(sectionChoice);
-        if(currentSection==nullptr)
+        River *startRiver=Source.searchRiver(currentSection->riverName);
+        Section *sec=startRiver->firstSection;
+        if(sec->secName==currentSection->secName)
         {
-          cout<<"This river does not exsist. Please check your spelling and try again."<<endl;
-        	cout<<'\n';
+          currentSection=sec;
         }
         else
         {
-          River *startRiver=Source.searchRiver(currentSection->riverName);
-          Section *sec=startRiver->firstSection;
-          if(sec->secName==currentSection->secName)
+          while(sec->secName!=currentSection->secName)
           {
-            currentSection=sec;
+            sec=sec->nextSection;
           }
-          else
-          {
-            while(sec->secName!=currentSection->secName)
-            {
-              sec=sec->nextSection;
-            }
-            currentSection=sec;
-          }
-          tripPlanner(currentSection,miles);
+          currentSection=sec;
         }
+        tripPlanner(currentSection,miles);
         break;
       }
       case 9:
