@@ -6,11 +6,6 @@
 #include <fstream>
 #include <sstream>
 using namespace std;
-struct Note
-{
-	string aNote;
-	Note* nextNote;
-};
 struct WaterLevel
 {
 	int day;
@@ -38,7 +33,6 @@ struct Section
 	Section *nextSection;
 	Section *secHashSec;
 	WaterLevel bestDay;
-	Note* notes;
 	Section *nextBest;
 	Section(string name,string river)
 	{
@@ -176,8 +170,6 @@ class RiverSource
 		void tripPlanner(string startingSection,double mileage);
 
 		BestSection* bestForDay();
-
-		void sectionCleaner(Section *deleteMe);
 
 		void showBestSection(BestSection *best);
 
