@@ -528,7 +528,7 @@ BestSection* RiverSource::bestForDay()
 					}
 					 else if(sectionTable[i].relLevel==temp->levels[i]->relativeLevel)
 					{
-						
+
 						Section *temp2=sectionTable[i].bestSec;
 						if(sectionTable[i].bestSec->nextBest==nullptr)
 						{
@@ -539,14 +539,14 @@ BestSection* RiverSource::bestForDay()
 						while(temp2!=nullptr)
 						{
 							temp2=temp2->nextBest;
-							
+
 						}
 						temp2=temp;
 						}
 
 					}
 			}
-				temp=temp->secHashSec;			
+				temp=temp->secHashSec;
 
 		}
 	}
@@ -741,6 +741,7 @@ while (!done)
   			getline(cin, menuChoice);
   			sectionChoice=Source.searchSections(menuChoice);
   			bestDay=Source.getBestDay(sectionChoice);
+        cout<<bestDay.waterLevel<<endl;
         if(bestDay.best!=nullptr)
         {
           cout<<"\n";
@@ -811,21 +812,30 @@ while (!done)
         getline(cin,mileageChoice);
         miles=stod(mileageChoice);
         Section *currentSection=Source.searchSections(sectionChoice);
-        River *startRiver=Source.searchRiver(currentSection->riverName);
-        Section *sec=startRiver->firstSection;
-        if(sec->secName==currentSection->secName)
+        if(currentSection==nullptr)
         {
-          currentSection=sec;
+          cout<<"This river does not exsist. Please check your spelling and try again."<<endl;
+        	cout<<'\n';
         }
         else
         {
-          while(sec->secName!=currentSection->secName)
+          River *startRiver=Source.searchRiver(currentSection->riverName);
+          Section *sec=startRiver->firstSection;
+          if(sec->secName==currentSection->secName)
           {
-            sec=sec->nextSection;
+            currentSection=sec;
           }
-          currentSection=sec;
+          else
+          {
+            while(sec->secName!=currentSection->secName)
+            {
+              sec=sec->nextSection;
+            }
+            currentSection=sec;
+          }
+          tripPlanner(currentSection,miles);
         }
-        tripPlanner(currentSection,miles);
+        break;
       }
       case 9:
       {
