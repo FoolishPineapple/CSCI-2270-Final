@@ -43,3 +43,13 @@ Roaring Fork River,Woody Creek,III,3.8,600
 Roaring Fork River,Toothache,III,6.2,700
 Roaring Fork River,Cemetary,II+,6.2,1400
 Roaring Fork River,Two Rivers,II,4,3000
+Frying Pan River,Upper,V,5.7,600
+Frying Pan River,Taylor Creek,IV,5,1000
+Frying Pan River,Toothache,III,6.2,700
+Crystal River,Crystal Mill,IV,3,2000
+Crystal River,Crystal Gorge,V,1.8,350
+Crystal River,Bogan Canyon,IV,3,2000
+Crystal River,Meat Grinder,V,2,2000
+Crystal River,Narrows,V,2.1,1500
+Crystal River,Avalanche to BRB,III,4.8,2000
+Crystal River,Cemetary,II+,6.2,1400
